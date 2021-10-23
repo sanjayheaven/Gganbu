@@ -31,8 +31,15 @@ const createBasicActions = (Model) => {
     update${Model}: async ({ ${modelId}, ...data }) => {
       return ${ModelName}.update({ _id: ${modelId} }, { $set: { ...data } })
     },
-    get${pluralize(Model)}: async ({ ${modelId}, ...data }) => {
-      return ${ModelName}.update({ _id: ${modelId} }, { $set: { ...data } })
+    get${pluralize(Model)}: async (
+        {skip=0,limit=10,filters={},sort={_id:-1}}
+        ) => {
+      return ${ModelName}.aggerate([
+          {$match:filters},
+          {$sort:{}},
+          {$skip:skip},
+          {$limit:limit}
+      ])
     },
     get${Model}: async ({ ${modelId} }) => {
       return ${ModelName}.findOneById({ _id: ${modelId} })
