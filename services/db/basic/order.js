@@ -4,7 +4,7 @@ module.exports = {
     return OrderModel.create(data)
   },
   deleteOrder: async ({ orderId }) => {
-    return OrderModel.deleteOneById({ _id: orderId })
+    return OrderModel.deleteOne({ _id: orderId })
   },
   updateOrder: async ({ orderId, ...data }) => {
     return OrderModel.update({ _id: orderId }, { $set: { ...data } })
@@ -15,12 +15,14 @@ module.exports = {
     filters = {},
     sort = { _id: -1 },
   }) => {
-    return OrderModel.aggerate([
+    let totalCount = OrderModel.countDocuments(filters)
+    let items = OrderModel.aggerate([
       { $match: filters },
       { $sort: sort },
       { $skip: skip },
       { $limit: limit },
     ])
+    return { totalCount, items }
   },
   getOrder: async ({ orderId }) => {
     return OrderModel.findOneById({ _id: orderId })
