@@ -14,7 +14,7 @@ const createRoute = (app, file, controller) => {
     const router = new Router({prefix:routerPrefix+"/${pluralize(file)}" }) 
     const Controllers = require("../../controllers/${app}/${file}")
     ${routes.join("\n")}
-    module.exports = router
+    module.exports = [router]
     `
 }
 
@@ -25,7 +25,7 @@ const main = () => {
   apps.forEach((app) => {
     let appPath = path.resolve(__dirname, `../controllers/${app}`)
     let files = fs.readdirSync(appPath)
-    console.log(files, 12222)
+    fs.mkdir(path.resolve(__dirname, `../routes`), () => {})
     files.forEach((file) => {
       let filePath = path.resolve(__dirname, `../controllers/${app}/`, file)
       let controller = require(filePath)

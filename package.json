@@ -4,7 +4,8 @@
   "description": "- Api 请求以页面为单位\r - 根据 Model Schema 自动生成 DB Services 的基础操作",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "set NODE_ENV=development&&nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,11 @@
   },
   "homepage": "https://github.com/sanjayheaven/server#readme",
   "dependencies": {
+    "koa": "^2.13.4",
+    "koa-compose": "^4.1.0",
+    "koa-router": "^10.1.1",
     "mongoose": "^5.12.4",
+    "nodemon": "^2.0.14",
     "pluralize": "^8.0.0"
   }
 }
