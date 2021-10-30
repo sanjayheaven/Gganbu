@@ -5,16 +5,12 @@ const pluralize = require("pluralize") // 单词复数
 const createRoute = (app, file, controller) => {
   let keys = Object.keys(controller)
   let routes = keys.map((key) => {
-    let method = (key.startsWith("get") && "get") || "post"
-    return `router.${method}('/${key}',Controllers.${key})`
+    let method = (key.startsWith("get") && "GET") || "POST"
+    return `{path:"/${key}",method:"${method}"}`
   })
   return `
-    const Router = require("koa-router")
-    const { routerPrefix } = require("../../config/config.router.js")
-    const router = new Router({prefix:routerPrefix+"/${pluralize(file)}" }) 
-    const Controllers = require("../../controllers/${app}/${file}")
-    ${routes.join("\n")}
-    module.exports = [router]
+    const routes = [${routes.join(",\n")}]
+    module.exports = routes
     `
 }
 

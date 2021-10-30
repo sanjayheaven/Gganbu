@@ -1,10 +1,8 @@
-const util = require("./util")
-const basic = require("./basic")
+const util = require("./actions")
 
 const connect = async () => {}
 
 module.exports = {
-  ...basic,
   ...util,
   connect,
 }
