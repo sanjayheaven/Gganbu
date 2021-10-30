@@ -4,6 +4,7 @@
  */
 const path = require("path")
 const fs = require("fs")
+const pluralize = require("pluralize")
 
 const listFiles = (filePath) => {
   let stat = fs.lstatSync(filePath)
@@ -58,20 +59,48 @@ const getRoutes = (controllers) => {
         method: (key.startsWith("get") && "GET") || "POST",
         middlewares: [],
         action: key,
+        fileName: controller.fileName,
+        controllerPath: controller.path,
       }
     })
     acc = [...acc, ...routes]
     return acc
   }, [])
 }
-getControllers()
+
+const KoaRouter = require("koa-router")
+const { routerPrefix } = require("../config/config.router.js")
+
+const getRouter = (routes) => {
+  return routes.reduce((acc, route) => {
+    let { app, fileName } = route
+    let name = fileName.substring(0, fileName.indexOf(".")) // 去除js后缀
+    let prefix = routerPrefix + `${app}/${pluralize(name)}`
+
+    let router = new KoaRouter({ prefix })
+    let controller = require(route.controllerPath)
+
+    if (route.method == "GET") {
+      router.get(route.path, controller[route.action])
+    } else {
+      router.post(route.path, controller[route.action])
+    }
+    acc.push(router.routes())
+    acc.push(router.allowedMethods())
+
+    return acc
+  }, [])
+}
 
 const Controller = getControllers()
-const Route = getRoutes(Controller)
-console.log(Controller, Route)
+const Routes = getRoutes(Controller)
+const Router = getRouter(Routes)
+
+console.log(Controller, Routes, Router)
 
 module.exports = {
   Controller,
-  Route,
-  Api, // api 是给前端调用的，会在编译的时候，自动转化成
+  Routes,
+  Router: [], // runtime Router
+  Api: {}, // api 是给前端调用的，会在编译的时候，自动转化成
 }
