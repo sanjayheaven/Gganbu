@@ -1,6 +1,12 @@
-<h1 align="center" >Gganbu </h1>
+<h1 align="center" >Gangu </h1>
 
 <p align="center">Gganbu - 面向未来的一体化 Web开发框架 </p>
+
+## 特性
+
+- 基于 Koa 的 Nodejs 开发框架。
+- 自动配置 Server 路由，零 Api 开发。
+- 自动配置 数据库基础操作
 
 ## 前言
 

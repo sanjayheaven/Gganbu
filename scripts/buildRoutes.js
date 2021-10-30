@@ -27,7 +27,7 @@ const main = () => {
       let controller = require(filePath)
       let basicPath = path.resolve(__dirname, `../routes/${app}/`, file)
       fs.mkdir(path.resolve(__dirname, `../routes/${app}`), () => {})
-      fs.writeFileSync(basicPath, createRoute(app, file, controller))
+      fs.writeFileSync(basicPath,  (app, file, controller))
       file = file.substring(0, file.indexOf("."))
     }, {})
   })
