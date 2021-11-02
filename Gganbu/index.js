@@ -12,7 +12,7 @@ const listFiles = (filePath) => {
   let files = fs.readdirSync(filePath)
   let res = files.map((file) => {
     return {
-      path: path.resolve(filePath, file),
+      filePath: path.resolve(filePath, file),
       fileName: file,
     }
   })
@@ -28,16 +28,23 @@ const listFiles = (filePath) => {
  *  actions:{}
  * }
  */
+
+/**
+ *  mapFnToCtxAction
+ *  将 controller 当中的普通函数 转换成 带有请求上下文的
+ *  约定好，返回值，即是，请求上下问返回体
+ */
+
 const getControllers = () => {
   let controllerPath = path.resolve(__dirname, "../controllers")
   let apps = listFiles(controllerPath)
-  //   console.log(apps)
   return apps.reduce((acc, app) => {
-    let files = listFiles(app.path)
+    let files = listFiles(app.filePath)
     acc = [
       ...acc,
       ...files.map((file) => {
-        let acitonsObj = require(file.path)
+        // 这里封装过的 需要 将 返回值 用 ctx.body 返回
+        let acitonsObj = require(file.filePath)
         return {
           ...file,
           app: app.fileName, // 增加应用标识
@@ -60,7 +67,7 @@ const getRoutes = (controllers) => {
         middlewares: [],
         action: key,
         fileName: controller.fileName,
-        controllerPath: controller.path,
+        controllerPath: controller.filePath,
       }
     })
     acc = [...acc, ...routes]
@@ -71,15 +78,13 @@ const getRoutes = (controllers) => {
 const KoaRouter = require("koa-router")
 const { routerPrefix } = require("../config/config.router.js")
 
-const getRouter = (routes) => {
+const createRouter = (routes) => {
   return routes.reduce((acc, route) => {
     let { app, fileName } = route
     let name = fileName.substring(0, fileName.indexOf(".")) // 去除js后缀
     let prefix = routerPrefix + `${app}/${pluralize(name)}`
-
     let router = new KoaRouter({ prefix })
     let controller = require(route.controllerPath)
-
     if (route.method == "GET") {
       router.get(route.path, controller[route.action])
     } else {
@@ -87,20 +92,36 @@ const getRouter = (routes) => {
     }
     acc.push(router.routes())
     acc.push(router.allowedMethods())
-
     return acc
   }, [])
 }
 
-const Controller = getControllers()
-const Routes = getRoutes(Controller)
-const Router = getRouter(Routes)
+const createApi = (controllers) => {
+  console.log(controllers, 282828)
+  return controllers.reduce((acc, controller) => {
+    let { app, fileName, actions } = controller
+    let name = fileName.substring(0, fileName.indexOf("."))
+    acc[app] = {
+      ...acc[app],
+      [`${name}Api`]: {
+        // path: `/api/v1/${app}/${pluralize(name)}`,
+        ...actions,
+      },
+    }
+    return acc
+  }, {})
+}
 
-console.log(Controller, Routes, Router)
+const Controller = getControllers()
+const Route = getRoutes(Controller)
+const Api = createApi(Controller)
+const Router = createRouter(Route)
+
+console.log(Controller, 272727)
 
 module.exports = {
   Controller,
-  Routes,
-  Router: [], // runtime Router
-  Api: {}, // api 是给前端调用的，会在编译的时候，自动转化成
+  Route,
+  Router, // runtime Router
+  Api, // api 是给前端调用的，会在编译的时候，自动转化成 请求的Api
 }
