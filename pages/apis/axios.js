@@ -12,7 +12,6 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     const canteenInfo = localStorage.getItem("canteenInfo")
-    // console.log("准备请求信息用的canteenInfo,", canteenInfo)
     if (canteenInfo) {
       config.headers["canteenInfo"] = encodeURIComponent(canteenInfo) //  包含中文需要编码
     }

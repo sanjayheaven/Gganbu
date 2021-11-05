@@ -22,7 +22,6 @@ const listFiles = (filePath) => {
 let routeDirPath = path.resolve(__dirname)
 let apps = listFiles(routeDirPath)
 let routeFiles = apps.reduce((acc, app) => {
-  console.log(app, 1111)
   let files = listFiles(app.path).map((file) => {
     return { ...file, app: app.fileName }
   })

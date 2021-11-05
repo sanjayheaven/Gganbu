@@ -7,9 +7,20 @@ const envConfig = require("./config/config.env.js")
 const { Router } = require("./Gganbu")
 const app = new Koa()
 
+const { als, useContext } = require("./Gganbu/hook")
+console.log(als, useContext, 2222)
+
 const main = async (app, port) => {
   try {
     await DBServices.connect() // 数据库连接
+    app.use((ctx, next) => {
+      als.run({ ctx: ctx }, async () => {
+        // let ctx = als.getStore()
+        let ctx = useContext()
+        console.log(ctx, 123344)
+        await next()
+      }) // sets default values
+    })
     app.use(koaCompose(middlewares)) // 注册中间件
     app.use(koaCompose(Router)) // 注册路由
     const server = app.listen(port, () =>

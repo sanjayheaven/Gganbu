@@ -97,7 +97,6 @@ const createRouter = (routes) => {
 }
 
 const createApi = (controllers) => {
-  console.log(controllers, 282828)
   return controllers.reduce((acc, controller) => {
     let { app, fileName, actions } = controller
     let name = fileName.substring(0, fileName.indexOf("."))
@@ -116,8 +115,6 @@ const Controller = getControllers()
 const Route = getRoutes(Controller)
 const Api = createApi(Controller)
 const Router = createRouter(Route)
-
-console.log(Controller, 272727)
 
 module.exports = {
   Controller,

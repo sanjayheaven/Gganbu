@@ -17,7 +17,6 @@ const createRoute = (app, file, controller) => {
 const main = () => {
   let controllerPath = path.resolve(__dirname, "../controllers")
   let apps = fs.readdirSync(controllerPath)
-  console.log(apps, 11111)
   apps.forEach((app) => {
     let appPath = path.resolve(__dirname, `../controllers/${app}`)
     let files = fs.readdirSync(appPath)
@@ -27,7 +26,7 @@ const main = () => {
       let controller = require(filePath)
       let basicPath = path.resolve(__dirname, `../routes/${app}/`, file)
       fs.mkdir(path.resolve(__dirname, `../routes/${app}`), () => {})
-      fs.writeFileSync(basicPath,  (app, file, controller))
+      fs.writeFileSync(basicPath, (app, file, controller))
       file = file.substring(0, file.indexOf("."))
     }, {})
   })
