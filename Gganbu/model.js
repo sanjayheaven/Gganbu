@@ -34,14 +34,9 @@ const listFiles = (filePath) => {
  *  将 controller 当中的普通函数 转换成 带有请求上下文的
  *  约定好，返回值，即是，请求上下问返回体
  */
-const getSrcDirname = () => {
-  let fileDirName = process.cwd()
-  return fileDirName.substring(0, fileDirName.indexOf("src") + 3)
-}
 
 const getControllers = () => {
-  let srcDirname = getSrcDirname()
-  let controllerPath = path.resolve(srcDirname, "controllers")
+  let controllerPath = path.resolve(__dirname, "../controllers")
   let apps = listFiles(controllerPath)
   return apps.reduce((acc, app) => {
     let files = listFiles(app.filePath)
@@ -82,7 +77,6 @@ const getRoutes = (controllers) => {
 
 const KoaRouter = require("koa-router")
 const { routerPrefix } = require("../config/config.router.js")
-const { dir } = require("console")
 
 const createRouter = (routes) => {
   return routes.reduce((acc, route) => {
@@ -124,7 +118,7 @@ const Router = createRouter(Route)
 
 module.exports = {
   Controller,
-  Route,
+  Route, //
   Router, // runtime Router
   Api, // api 是给前端调用的，会在编译的时候，自动转化成 请求的Api
 }
