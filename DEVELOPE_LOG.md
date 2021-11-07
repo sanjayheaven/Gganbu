@@ -2,6 +2,9 @@
 
 ## 想法
 
+- 想要直接跳过路由可分为 get 和 post 直接 post 全部一把梭。
+  - 整体的数据获取方式参考 graphql。
+  - 并且建立一个全局解析器的概念。resolver 用户指定获取 数组资源。
 - 如果要开发直接调用后端函数，需要对 controller 再次封装，将返回值的 赋值给。 ctx.body
   - 哇塞，这样的话，那可以再封装，继续为 controller 增加 一个路由中间件。
 - 一体化场景下，能否在开发过程中，直接从前端调用后端的函数。但是正式环境，分开来的。
@@ -13,8 +16,8 @@
 - 实现 server 的配置自动化 （已完成）
   - 数据库基础操作自动写入
   - 根据 controllers 自动生成路由
-- 封装 controller 为什么要封装 Controller 因为要从前端直接调用后端函数。
-  - 如果我们以之前的写法 还依赖于 ctx。那 可能很别扭。
+- 封装 controller 为什么要封装 Controller 因为要从前端直接调用后端函数。（已完成）
+  - 如果我们以之前的写法 还依赖于 ctx。那 可能很别扭
 - 接入运行时，
   - 在 commonjs 体系下，路由配置化，
   - 配置，到接入运行时，相当于 解决 routes 的文件存在，对路由的读取 是否存在在内存中。
@@ -22,13 +25,37 @@
 - 实现 api SDK 的配置自动化
   - 接入 前端 framework
 
+## 1107
+
+- 初步规范目录
+├─src
+│  ├─controllers
+│  │  ├─client
+│  │  └─manage
+│  ├─middlewares
+│  ├─pages
+│  │  index.js
+│  └─services
+│      ├─business
+│      ├─db
+│      │  ├─actions
+│      │  ├─basic
+│      │  └─models
+│      └─util
+## 1106
+
+- 引入 model 模型 和 hook 钩子的概念
+  - model ： Controller Route Router Api
+  - hook：useContext,请求上下文
+- 利用 als 实现 useContext
+
 ## 1101
 
 - 引入 **AsyncLocalStorage** 解决请求上下文共享的问题
   - 对于在同一异步资源中将会维护一份数据，而不会被其它异步资源所修改
 
 ## 1030
- 
+
 - 实现 server 运行
 - 将路由以配置形式呈现
 

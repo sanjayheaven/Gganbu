@@ -1,18 +1,13 @@
-// 前端伪代码
-/**
- * UI
- * 控制
- * await Api = {}
- */
 const {
   Api,
   Api: { manage },
-} = require("../Gganbu")
+} = require("../../Gganbu")
 
 const { orderApi } = manage
 
 const main = async () => {
   let res = await orderApi.getInfo()
-  console.log(res, 111)
+  let createInfo = await orderApi.createOrder({ name: 1, time: new Date() })
+  console.log(res, 111, createInfo)
 }
 main()
