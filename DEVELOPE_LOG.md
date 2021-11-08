@@ -2,6 +2,8 @@
 
 ## 想法
 
+- 抽象模型 model 更为精准，不仅仅是多应用的体系。
+  - 根据目录结构分配路由路径
 - 想要直接跳过路由可分为 get 和 post 直接 post 全部一把梭。
   - 整体的数据获取方式参考 graphql。
   - 并且建立一个全局解析器的概念。resolver 用户指定获取 数组资源。
@@ -25,23 +27,30 @@
 - 实现 api SDK 的配置自动化
   - 接入 前端 framework
 
+## 1108
+
+- 增加模型 App
+
 ## 1107
 
 - 初步规范目录
-├─src
-│  ├─controllers
-│  │  ├─client
-│  │  └─manage
-│  ├─middlewares
-│  ├─pages
-│  │  index.js
-│  └─services
-│      ├─business
-│      ├─db
-│      │  ├─actions
-│      │  ├─basic
-│      │  └─models
-│      └─util
+
+```js
+  ├─src
+  │ ├─controllers
+  │ │ ├─client
+  │ │ └─manage
+  │ ├─middlewares
+  │ ├─pages
+  │ └─services
+  │ ├─business
+  │ ├─db
+  │ │ ├─actions
+  │ │ ├─basic
+  │ │ └─models
+  │ └─util
+```
+
 ## 1106
 
 - 引入 model 模型 和 hook 钩子的概念

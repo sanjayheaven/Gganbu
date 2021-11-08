@@ -1,13 +1,12 @@
 const { DBServices } = require("./services")
 const middlewares = require("./middlewares")
-const routes = require("./scripts")
+const routes = require("../scripts")
 const koaCompose = require("koa-compose")
-const Koa = require("koa")
-const envConfig = require("./config/config.env.js")
-const { Router } = require("./Gganbu")
-const app = new Koa()
+const envConfig = require("../config/config.env.js")
+const { Router } = require("../Gganbu")
 
-const { als, useContext } = require("./Gganbu/hook")
+const { als, useContext } = require("../Gganbu/hook")
+const { App } = require("../Gganbu/model")
 console.log(als, useContext, 2222)
 
 const main = async (app, port) => {
@@ -38,4 +37,4 @@ const main = async (app, port) => {
     console.log(err)
   }
 }
-main(app, envConfig.port)
+main(App, envConfig.port)

@@ -5,6 +5,7 @@
 const path = require("path")
 const fs = require("fs")
 const pluralize = require("pluralize")
+const Koa = require("koa")
 
 const listFiles = (filePath) => {
   let stat = fs.lstatSync(filePath)
@@ -41,7 +42,7 @@ const getSrcDirname = () => {
 
 const getControllers = () => {
   let srcDirname = getSrcDirname()
-  let controllerPath = path.resolve(srcDirname, "controllers")
+  let controllerPath = path.resolve(srcDirname, "controller")
   let apps = listFiles(controllerPath)
   return apps.reduce((acc, app) => {
     let files = listFiles(app.filePath)
@@ -82,7 +83,6 @@ const getRoutes = (controllers) => {
 
 const KoaRouter = require("koa-router")
 const { routerPrefix } = require("../config/config.router.js")
-const { dir } = require("console")
 
 const createRouter = (routes) => {
   return routes.reduce((acc, route) => {
@@ -127,4 +127,5 @@ module.exports = {
   Route,
   Router, // runtime Router
   Api, // api 是给前端调用的，会在编译的时候，自动转化成 请求的Api
+  App: new Koa(),
 }
