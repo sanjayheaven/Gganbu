@@ -1,17 +1,17 @@
-const { DBServices } = require("./services")
-const middlewares = require("./middlewares")
+import { DBService } from "./service"
+console.log(DBService, 2222)
+const middlewares = require("./middleware")
 const routes = require("../scripts")
 const koaCompose = require("koa-compose")
 const envConfig = require("../config/config.env.js")
-const { Router } = require("../Gganbu")
 
 const { als, useContext } = require("../Gganbu/hook")
-const { App } = require("../Gganbu/model")
+const { App, Router } = require("../Gganbu/model")
 console.log(als, useContext, 2222)
 
 const main = async (app, port) => {
   try {
-    await DBServices.connect() // 数据库连接
+    await DBService.connect() // 数据库连接
     app.use((ctx, next) => {
       als.run({ ctx: ctx }, async () => {
         // let ctx = als.getStore()

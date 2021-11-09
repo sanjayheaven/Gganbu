@@ -1,8 +1,3 @@
-const util = require("./actions")
+export const util = require("./actions")
 
-const connect = async () => {}
-
-module.exports = {
-  ...util,
-  connect,
-}
+export const connect = async () => {}

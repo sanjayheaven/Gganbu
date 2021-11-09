@@ -1,11 +1,6 @@
 const { AsyncLocalStorage } = require("async_hooks")
-const als = new AsyncLocalStorage()
+export const als = new AsyncLocalStorage()
 
-const useContext = () => {
+export const useContext = () => {
   return als.getStore("ctx")
-}
-
-module.exports = {
-  useContext,
-  als,
 }

@@ -2,9 +2,10 @@
  * 如果这个作为一个 npm库 那导入 let {Controller} =  require('Gganbu')
  * 怎么能确保在任何地方导入 都能读取到 指定Controller、
  */
-const path = require("path")
-const fs = require("fs")
-const pluralize = require("pluralize")
+import path from "path"
+import fs from "fs"
+import pluralize from "pluralize"
+import Koa from "Koa"
 
 const listFiles = (filePath) => {
   let stat = fs.lstatSync(filePath)
@@ -34,9 +35,21 @@ const listFiles = (filePath) => {
  *  将 controller 当中的普通函数 转换成 带有请求上下文的
  *  约定好，返回值，即是，请求上下问返回体
  */
+const getSrcDirname = () => {
+  let fileDirName = process.cwd()
+  console.log(fileDirName, 11112222)
+  let index = fileDirName.indexOf("src")
+  return (
+    (index !== -1 && fileDirName.substring(0, index + 3)) ||
+    path.resolve(fileDirName, "src")
+  )
+}
 
 const getControllers = () => {
-  let controllerPath = path.resolve(__dirname, "../controllers")
+  let srcDirname = getSrcDirname()
+  console.log(srcDirname, 11112222)
+
+  let controllerPath = path.resolve(srcDirname, "controller")
   let apps = listFiles(controllerPath)
   return apps.reduce((acc, app) => {
     let files = listFiles(app.filePath)
@@ -111,14 +124,8 @@ const createApi = (controllers) => {
   }, {})
 }
 
-const Controller = getControllers()
-const Route = getRoutes(Controller)
-const Api = createApi(Controller)
-const Router = createRouter(Route)
-
-module.exports = {
-  Controller,
-  Route, //
-  Router, // runtime Router
-  Api, // api 是给前端调用的，会在编译的时候，自动转化成 请求的Api
-}
+export const Controller = getControllers()
+export const Route = getRoutes(Controller)
+export const Api = createApi(Controller)
+export const Router = createRouter(Route)
+export const App = new Koa()

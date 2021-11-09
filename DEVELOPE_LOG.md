@@ -27,6 +27,10 @@
 - 实现 api SDK 的配置自动化
   - 接入 前端 framework
 
+## 1109
+
+- 引入 babel，代码由 commonjs 规范变成 ES6+规范
+
 ## 1108
 
 - 增加模型 App
