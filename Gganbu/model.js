@@ -6,20 +6,10 @@ import path from "path"
 import fs from "fs"
 import pluralize from "pluralize"
 import Koa from "Koa"
-
-const listFiles = (filePath) => {
-  let stat = fs.lstatSync(filePath)
-  if (!stat.isDirectory()) return []
-  let files = fs.readdirSync(filePath)
-  let res = files.map((file) => {
-    return {
-      filePath: path.resolve(filePath, file),
-      fileName: file,
-    }
-  })
-  return res
-}
-
+import { listFiles, convertFileToRoute } from "./util"
+import { init, parse } from "es-module-lexer"
+import { join } from "upath"
+console.log(init, parse, 1919199)
 /**
  * 返回结果：[Object]
  * {
@@ -37,36 +27,23 @@ const listFiles = (filePath) => {
  */
 const getSrcDirname = () => {
   let fileDirName = process.cwd()
-  console.log(fileDirName, 11112222)
   let index = fileDirName.indexOf("src")
   return (
     (index !== -1 && fileDirName.substring(0, index + 3)) ||
     path.resolve(fileDirName, "src")
   )
 }
-
 const getControllers = () => {
   let srcDirname = getSrcDirname()
-  console.log(srcDirname, 11112222)
-
   let controllerPath = path.resolve(srcDirname, "controller")
-  let apps = listFiles(controllerPath)
-  return apps.reduce((acc, app) => {
-    let files = listFiles(app.filePath)
-    acc = [
-      ...acc,
-      ...files.map((file) => {
-        // 这里封装过的 需要 将 返回值 用 ctx.body 返回
-        let acitonsObj = require(file.filePath)
-        return {
-          ...file,
-          app: app.fileName, // 增加应用标识
-          actions: acitonsObj,
-        }
-      }),
-    ]
-    return acc
-  }, [])
+  let files = listFiles(controllerPath)
+  return files.map((file) => {
+    // 会把controller 第一个目录下的目录名称作为 应用名称
+    return {
+      ...file,
+      actions: require(file.filePath),
+    }
+  })
 }
 
 const getRoutes = (controllers) => {
@@ -93,16 +70,23 @@ const { routerPrefix } = require("../config/config.router.js")
 
 const createRouter = (routes) => {
   return routes.reduce((acc, route) => {
-    let { app, fileName } = route
-    let name = fileName.substring(0, fileName.indexOf(".")) // 去除js后缀
-    let prefix = routerPrefix + `${app}/${pluralize(name)}`
+    let { app, fileName, controllerPath } = route
+    let name = convertFileToRoute(controllerPath)
+    let prefix = join(routerPrefix, name)
     let router = new KoaRouter({ prefix })
     let controller = require(route.controllerPath)
+    let ctyMap = function (action) {
+      return function (ctx) {
+        let res = action()
+        ctx.body = res
+      }
+    }
     if (route.method == "GET") {
-      router.get(route.path, controller[route.action])
+      router.get(route.path, ctyMap(controller[route.action]))
     } else {
       router.post(route.path, controller[route.action])
     }
+    console.log(router)
     acc.push(router.routes())
     acc.push(router.allowedMethods())
     return acc
@@ -125,6 +109,7 @@ const createApi = (controllers) => {
 }
 
 export const Controller = getControllers()
+console.log(Controller, 111)
 export const Route = getRoutes(Controller)
 export const Api = createApi(Controller)
 export const Router = createRouter(Route)
