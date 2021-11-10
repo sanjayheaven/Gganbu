@@ -23,13 +23,17 @@
   "dependencies": {
     "@vitejs/plugin-vue": "^1.9.3",
     "@vue/compiler-sfc": "^3.2.21",
+    "axios": "^0.24.0",
+    "es-module-lexer": "^0.9.3",
     "koa": "^2.13.4",
     "koa-compose": "^4.1.0",
     "koa-router": "^10.1.1",
     "mongoose": "^5.12.4",
     "nodemon": "^2.0.14",
     "pluralize": "^8.0.0",
+    "upath": "^2.0.1",
     "vite": "^2.6.4",
+    "vite-plugin-require": "0.0.5",
     "vue": "^3.2.15"
   },
   "devDependencies": {
