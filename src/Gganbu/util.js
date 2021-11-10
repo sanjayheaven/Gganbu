@@ -71,3 +71,12 @@ export const createApiSDK = async (code, file) => {
 
   return api
 }
+
+export const isApiFile = (file) => {
+  // 判断是不是属于 controller下的js文件
+  if (file.indexOf("/src/controller") == -1) return false
+  if (extname(file) !== ".js") {
+    return false
+  }
+  return true
+}

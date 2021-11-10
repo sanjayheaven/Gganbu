@@ -1,10 +1,11 @@
 // 订单相关页面
-
-export const getInfo = (ctx) => {
+import { orderService } from "../../service"
+export const getInfo = async (ctx) => {
   // const [ctx, setCtx] = useCtx()
   // const context = useContext()
+  let res = await orderService.getOrders()
   // const context = useContext()
-  return "你好 getInfo"
+  return res
 }
 export const createOrder = async (info) => {
   return {

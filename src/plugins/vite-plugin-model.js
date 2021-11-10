@@ -1,6 +1,6 @@
 // 这是在node环境下运行的。 consolelog 在控制看 不在浏览器。
 import path, { extname } from "path"
-import { createApiSDK } from "../Gganbu/util"
+import { createApiSDK, isApiFile } from "../Gganbu/util"
 
 export default function model() {
   const fieldId = "@Gganbu/model"
@@ -13,16 +13,24 @@ export default function model() {
       }
     },
     async transform(code, file) {
-      // 判断是不是controller 底下的
-      if (file.indexOf("/src/controller") == -1) return null
-      if (extname(file) !== ".js") {
+      // 必须要是 ApiFile
+      if (!isApiFile(file)) return null
+      // let env = process.env.NODE_ENV
+      // console.log(env, "看看当前的env")
+      if (env == "development") {
         return null
       }
+
       let api = await createApiSDK(code, file)
       return {
         code: api,
       }
-      //   吧现在的controller文件，转换称api形式
+    },
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        // 自定义请求处理...
+        console.log("req, res, next", req, res, next)
+      })
     },
   }
 }
