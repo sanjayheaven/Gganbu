@@ -9,7 +9,6 @@ import Koa from "Koa"
 import { listFiles, convertFileToRoute } from "./util"
 import { init, parse } from "es-module-lexer"
 import { join } from "upath"
-console.log(init, parse, 1919199)
 /**
  * 返回结果：[Object]
  * {
