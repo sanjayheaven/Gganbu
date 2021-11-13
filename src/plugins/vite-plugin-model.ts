@@ -2,8 +2,8 @@
 import path, { extname } from "path"
 import { createApiSDK, isApiFile } from "../Gganbu/util"
 
-import { Controller } from "../Gganbu/model"
-console.log(Controller,1122223344)
+import { getControllers, getActions, Controller } from "../Gganbu/model"
+console.log("导入的控制器")
 export default function model() {
   const fieldId = "@Gganbu/model"
 
@@ -16,7 +16,12 @@ export default function model() {
     },
     async transform(code, file) {
       // 必须要是 ApiFile
-      if (!isApiFile(file)) return null
+
+      // console.log(file, 111)
+      // let res = await getActions(file)
+      let res = isApiFile(file)
+      console.log(res, 101010)
+      if (!res) return null
       // let env = process.env.NODE_ENV
       // console.log(env, "看看当前的env")
       // if (env == "development") {
@@ -32,7 +37,7 @@ export default function model() {
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         // 自定义请求处理...
-        console.log("req, res, next", req.url)
+        // console.log("req, res, next", req.url)
         next()
       })
     },

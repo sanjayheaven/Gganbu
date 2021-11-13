@@ -3,6 +3,17 @@ import fs from "fs"
 import pluralize from "pluralize"
 import { init, parse } from "es-module-lexer"
 
+const isTsOrJsFile = (file) => {
+  return [".ts", ".js"].includes(extname(file))
+}
+
+export const isApiFile = (file) => {
+  // 判断是不是属于 controller下的js文件
+  if (file.indexOf("/src/controller") == -1) return false
+  if (!isTsOrJsFile(file)) return false
+  return true
+}
+
 export const listFiles = (currentDirPath) => {
   return fs.readdirSync(currentDirPath).reduce((acc, file) => {
     let filePath = path.resolve(currentDirPath, file)
@@ -11,8 +22,7 @@ export const listFiles = (currentDirPath) => {
       let childFiles = listFiles(filePath)
       return acc.concat(childFiles)
     } else if (stat.isFile()) {
-      let extname = path.extname(file)
-      if (extname != ".ts" ) return acc
+      if (!isTsOrJsFile(file)) return acc
       acc.push({
         filePath: filePath,
         fileName: file,
@@ -22,24 +32,26 @@ export const listFiles = (currentDirPath) => {
   }, [])
 }
 
+/**
+ * file: D:/Github/Gganbu/src/controller/manage/order.js
+ * ---->  manage/orders
+ */
 export const convertFileToRoute = (file) => {
-  // D:/Github/Gganbu/src/controller/manage/order.js
-  // --->  manage/orders
   let splitArr = file.split("/")
   let sliceArr = splitArr.slice(splitArr.indexOf("controller") + 1)
   console.log(sliceArr)
   let length = sliceArr.length
   let lastItem = sliceArr[length - 1]
-  if (extname(lastItem) === ".js") {
+  if (isTsOrJsFile(file)) {
     lastItem = lastItem.substring(0, lastItem.indexOf(".")) // 去除js后缀
   }
-  lastItem
   sliceArr.splice(length - 1, 1, pluralize(lastItem)) // 替换原来的最后一项
   return sliceArr.join("/")
 }
 
 const createApi = (exports, route, client = "'@/Gganbu/request'") => {
   let fns = exports
+    .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
       let url = join(route, name)
       let method = (name.startsWith("get") && "GET") || "POST"
@@ -59,24 +71,11 @@ const createApi = (exports, route, client = "'@/Gganbu/request'") => {
       ${fns}
     `
 }
+
 export const createApiSDK = async (code, file) => {
   await init
   const [imports, exports] = parse(code)
-
-  // D:/Github/Gganbu/src/controller/manage/order.js
-  // --->  manage/orders
   let route = convertFileToRoute(file)
-
   const api = createApi(exports, route)
-
   return api
-}
-
-export const isApiFile = (file) => {
-  // 判断是不是属于 controller下的js文件
-  if (file.indexOf("/src/controller") == -1) return false
-  if (extname(file) !== ".js") {
-    return false
-  }
-  return true
 }
