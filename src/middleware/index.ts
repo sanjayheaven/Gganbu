@@ -1,6 +1,13 @@
+// 请求body 解析成对象
+import bodyParser from "koa-bodyparser"
+
+// 处理跨域
+import cors from "koa2-cors"
+
 async function logger(ctx, next) {
-  console.log(`当前请求路由: ${ctx.url}`)
+  console.log(`请求路由: ${ctx.url}`)
   await next()
+  console.log("请求返回值：", ctx.body, ctx.request.body)
 }
 
 // 错误处理 中间件 前置部分
@@ -19,17 +26,24 @@ async function errorHandling(ctx, next) {
     let payload = {}
     payload["error"] = name || "Internal Server Error"
     payload["code"] = code || 500
-    payload["message"] = message || "Internal Server Error"
+    payload["message"] = message || "服务器信息获取错误"
     payload["message_en"] = message_en || "Internal Server Error"
     console.log(payload, "看看捕捉到的错误")
     ctx.body = payload
   }
 }
 
-// 字符串解析
-import bodyParser from "koa-bodyparser"
-
-// 处理跨域
-import cors from "koa2-cors"
-
-export default [logger, errorHandling, bodyParser(), cors()]
+export default [
+  logger,
+  errorHandling,
+  async (ctx, next) => {
+    console.log(ctx.request.body, ctx.request.rawBody, "请求前看一下")
+    await next()
+  },
+  bodyParser(),
+  async (ctx, next) => {
+    console.log(ctx.request.body, ctx.request.rawBody, "请求后看一下")
+    await next()
+  },
+  cors(),
+]

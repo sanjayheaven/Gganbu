@@ -7,12 +7,12 @@ const createApi = (exports, route, client = "'~/Gganbu/request'") => {
     .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
       let url = join(route, name)
-      let method = (name.startsWith("get") && "GET") || "POST"
+      let method = (name.startsWith("get") && "get") || "post"
       console.log(url, name, typeof url, 1111)
       return `
           export async function ${name} (...args){
-            return request({
-              url:"${url}",
+            return await request({
+              url:"/${url}",
               method: "${method}",
               data:{args}
             })

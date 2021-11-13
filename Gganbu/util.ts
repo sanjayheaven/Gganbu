@@ -55,6 +55,7 @@ export const convertFileToRoute = (file) => {
  */
 export const mapReturnToCtxBody = function (actionFn) {
   return async function (ctx) {
+    // console.log(ctx.url, "看看action请求的url")
     let res = await actionFn()
     ctx.body = res
   }

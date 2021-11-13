@@ -77,14 +77,11 @@ export const getRouter = (routes) => {
     let prefix = join(routerPrefix, name)
     let router = new KoaRouter({ prefix })
 
-    let action = mapReturnToCtxBody(actionFn)
-    console.log(action, typeof actionFn)
     if (route.method == "GET") {
       router.get(route.path, mapReturnToCtxBody(actionFn))
     } else {
       router.post(route.path, mapReturnToCtxBody(actionFn))
     }
-    console.log(router, 292992)
     acc.push(router.routes())
     acc.push(router.allowedMethods())
     return acc
@@ -94,7 +91,6 @@ export const getRouter = (routes) => {
 export const Controller = getControllers()
 export const createRouter = async () => {
   let Route = await getRoutes(Controller)
-  console.log("Route", 11889999)
   return getRouter(Route)
 }
 export const App = new Koa()
