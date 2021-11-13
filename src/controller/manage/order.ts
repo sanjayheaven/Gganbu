@@ -1,11 +1,11 @@
 // 订单相关页面
-import { orderService } from "../../service"
-export const getInfo = async (ctx) => {
+// import { orderService } from "../../service"
+export const getInfo = async () => {
   // const [ctx, setCtx] = useCtx()
   // const context = useContext()
-  let res = await orderService.getOrders()
+  // let res = await orderService.getOrders()
   // const context = useContext()
-  return res
+  return "getInfo"
 }
 export const createOrder = async (info) => {
   return {
@@ -15,3 +15,7 @@ export const createOrder = async (info) => {
 }
 export const updateOrder = async () => {}
 export const deleteOrder = async () => {}
+
+export default () => {
+  console.log("export default")
+}

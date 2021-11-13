@@ -1,5 +1,4 @@
 import mongoose, { connect } from "mongoose"
-import { orderModel } from "./model"
 import axios from "axios"
 export default async (dbAddress) => {
   console.log("调用链接,", mongoose)

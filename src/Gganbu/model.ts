@@ -32,80 +32,97 @@ const getSrcDirname = () => {
     path.resolve(fileDirName, "src")
   )
 }
-const getControllers = () => {
+export const getActions = (filePath) => {
+  // filePath 需要去除后缀 .ts
+  // let res = import(filePath)
+  // let filePathTrim = filePath.slice(0, -3) + ".js"
+  // console.log(
+  //   filePathTrim,
+  //   "格式化文件",
+  //   filePathTrim === "D:/Github/Gganbu/src/controller/manage/order"
+  // )
+  // const res = require(filePath).default
+  // console.log(res, "动态导入表达式")
+  // return res
+  return import(filePath)
+}
+export const getControllers = () => {
   let srcDirname = getSrcDirname()
   let controllerPath = path.resolve(srcDirname, "controller")
   let files = listFiles(controllerPath)
   return files.map((file) => {
+    console.log(file, "看看filecontroller")
+    // let res = getActions(file.filePath)
+    // console.log(res, 929229)
     // 会把controller 第一个目录下的目录名称作为 应用名称
     return {
       ...file,
-      actions: require(file.filePath),
+      actions: [],
     }
   })
 }
 
-const getRoutes = (controllers) => {
-  return controllers.reduce((acc, controller) => {
-    let { actions } = controller
-    let routes = Object.keys(actions).map((key) => {
-      return {
-        app: controller.app,
-        path: "/" + key,
-        method: (key.startsWith("get") && "GET") || "POST",
-        middlewares: [],
-        action: key,
-        fileName: controller.fileName,
-        controllerPath: controller.filePath,
-      }
-    })
-    acc = [...acc, ...routes]
-    return acc
-  }, [])
-}
+// const getRoutes = (controllers) => {
+//   return controllers.reduce((acc, controller) => {
+//     let { actions } = controller
+//     let routes = Object.keys(actions).map((key) => {
+//       return {
+//         app: controller.app,
+//         path: "/" + key,
+//         method: (key.startsWith("get") && "GET") || "POST",
+//         middlewares: [],
+//         action: key,
+//         fileName: controller.fileName,
+//         controllerPath: controller.filePath,
+//       }
+//     })
+//     acc = [...acc, ...routes]
+//     return acc
+//   }, [])
+// }
 
-const KoaRouter = require("koa-router")
 // const { routerPrefix } = require("../config/config.router.js")
 
-const createRouter = (routes) => {
-  return routes.reduce((acc, route) => {
-    let { app, fileName, controllerPath } = route
-    let name = convertFileToRoute(controllerPath)
-    let prefix = join(routerPrefix, name)
-    let router = new KoaRouter({ prefix })
-    let controller = require(route.controllerPath)
-    let ctyMap = function (action) {
-      return function (ctx) {
-        let res = action()
-        ctx.body = res
-      }
-    }
-    if (route.method == "GET") {
-      router.get(route.path, ctyMap(controller[route.action]))
-    } else {
-      router.post(route.path, controller[route.action])
-    }
-    console.log(router)
-    acc.push(router.routes())
-    acc.push(router.allowedMethods())
-    return acc
-  }, [])
-}
+const routerPrefix = "/api"
+// const createRouter = (routes) => {
+//   return routes.reduce((acc, route) => {
+//     let { app, fileName, controllerPath } = route
+//     let name = convertFileToRoute(controllerPath)
+//     let prefix = join(routerPrefix, name)
+//     let router = new KoaRouter({ prefix })
+//     let controller = require(route.controllerPath)
+//     let ctyMap = function (action) {
+//       return function (ctx) {
+//         let res = action()
+//         ctx.body = res
+//       }
+//     }
+//     if (route.method == "GET") {
+//       router.get(route.path, ctyMap(controller[route.action]))
+//     } else {
+//       router.post(route.path, controller[route.action])
+//     }
+//     console.log(router)
+//     acc.push(router.routes())
+//     acc.push(router.allowedMethods())
+//     return acc
+//   }, [])
+// }
 
-const createApi = (controllers) => {
-  return controllers.reduce((acc, controller) => {
-    let { app, fileName, actions } = controller
-    let name = fileName.substring(0, fileName.indexOf("."))
-    acc[app] = {
-      ...acc[app],
-      [`${name}Api`]: {
-        // path: `/api/v1/${app}/${pluralize(name)}`,
-        ...actions,
-      },
-    }
-    return acc
-  }, {})
-}
+// const createApi = (controllers) => {
+//   return controllers.reduce((acc, controller) => {
+//     let { app, fileName, actions } = controller
+//     let name = fileName.substring(0, fileName.indexOf("."))
+//     acc[app] = {
+//       ...acc[app],
+//       [`${name}Api`]: {
+//         // path: `/api/v1/${app}/${pluralize(name)}`,
+//         ...actions,
+//       },
+//     }
+//     return acc
+//   }, {})
+// }
 
 export const Controller = getControllers()
 console.log(Controller, 111)
