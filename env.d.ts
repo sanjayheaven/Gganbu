@@ -6,3 +6,6 @@ declare module "*.vue" {
 
 declare module "*.js"
 declare module "*.ts"
+
+declare module "koa-bodyparser"
+declare module "koa2-cors"
