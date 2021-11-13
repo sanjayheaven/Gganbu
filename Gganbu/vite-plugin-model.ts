@@ -1,7 +1,10 @@
 // 这是在node环境下运行的。 consolelog 在控制看 不在浏览器。
 import { createApiSDK } from "./api"
 
-import { getControllers, Controller } from "./model"
+import { getControllers, Controller, App, AppStart } from "./model"
+
+console.log(Controller, "看看控制器")
+
 import { isApiFile } from "./util"
 export default function model() {
   const fieldId = "@Gganbu/model"
@@ -16,13 +19,13 @@ export default function model() {
       let res = isApiFile(file)
       if (!res) return null
       let api = await createApiSDK(code, file)
-      console.log(api, 1112233)
       return {
         code: api,
       }
     },
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
+    async configureServer(server) {
+      await AppStart()
+      server.middlewares.use(async (req, res, next) => {
         // 自定义请求处理...
         // console.log("req, res, next", req.url)
         next()

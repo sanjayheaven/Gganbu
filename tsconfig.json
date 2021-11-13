@@ -18,7 +18,8 @@
     "types": ["vite/client", "Node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "~/*": ["*"]
     }
   },
   // "include": ["./src"],

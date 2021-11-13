@@ -2,11 +2,13 @@
  * 如果这个作为一个 npm库 那导入 let {Controller} =  require('Gganbu')
  * 怎么能确保在任何地方导入 都能读取到 指定Controller、
  */
-import path from "path"
 import Koa from "Koa"
+import koaCompose from "koa-compose"
 import KoaRouter from "koa-router"
 import { listFiles, convertFileToRoute, mapReturnToCtxBody } from "./util"
-import { join } from "upath"
+import { join, resolve } from "upath"
+import { als, useContext } from "./hook"
+
 /**
  * 返回结果：[Object]
  * {
@@ -27,28 +29,30 @@ const getSrcDirname = () => {
   let index = fileDirName.indexOf("src")
   return (
     (index !== -1 && fileDirName.substring(0, index + 3)) ||
-    path.resolve(fileDirName, "src")
+    resolve(fileDirName, "src")
   )
 }
+/**
+ * 动态引入文件
+ */
 export const importAction = (filePath) => {
-  return () => import(filePath)
+  // 如果是目录，那就查询 index.ts 文件
+  // 如果是文件，那就查询文件
+  return import(filePath)
 }
 export const getControllers = () => {
   let srcDirname = getSrcDirname()
-  let controllerPath = path.resolve(srcDirname, "controller")
+  let controllerPath = resolve(srcDirname, "controller")
   let files = listFiles(controllerPath)
   return files.map((file) => {
-    return {
-      ...file,
-      importActionObj: importAction(file.filePath),
-    }
+    return { ...file }
   })
 }
 
 export const getRoutes = async (controllers) => {
   return controllers.reduce(async (acc, controller) => {
-    let { importActionObj, fileName, filePath } = controller
-    let actionObj = await importActionObj()
+    let { fileName, filePath } = controller
+    let actionObj = await importAction(filePath)
     let routes = Object.keys(actionObj).map((key) => {
       return {
         path: "/" + key,
@@ -90,7 +94,44 @@ export const getRouter = (routes) => {
 
 export const Controller = getControllers()
 export const createRouter = async () => {
-  let Route = await getRoutes(Controller)
+  const Route = await getRoutes(Controller)
   return getRouter(Route)
 }
+
 export const App = new Koa()
+
+export const Middleware = [] // 包括 als中间 全局中间件 路由中间件
+
+export const getMiddlerware = async () => {
+  let srcDirname = getSrcDirname()
+  let middlewarePath = resolve("file://", srcDirname, "middleware")
+  console.log(srcDirname, 1919200000, middlewarePath)
+  return importAction(middlewarePath)
+}
+
+export const AppStart = async () => {
+  const ALSMiddleware = async (ctx, next) => {
+    await als.run({ ctx: ctx }, async () => {})
+    await next()
+  }
+  const Middleware = await getMiddlerware()
+  const Router = await createRouter()
+
+  App.use(koaCompose([ALSMiddleware, ...Middleware.default, ...Router]))
+
+  // 启动
+  const server = App.listen(7006, () =>
+    console.log(`项目启动, 端口：${7006}, 环境：${process.env.NODE_ENV}`)
+  )
+
+  // pm2 平滑更新
+  process.on("SIGINT", () => {
+    server.keepAliveTimeout = 1
+    server.close(() => {
+      process.exit(0)
+    })
+  })
+}
+// app 启动
+// 加载中间件
+//
