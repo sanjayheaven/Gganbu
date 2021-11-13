@@ -15,7 +15,7 @@
     "jsx": "preserve",
     // "experimentalDecorators": true,
     // "emitDecoratorMetadata": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "Node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

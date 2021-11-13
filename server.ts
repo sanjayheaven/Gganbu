@@ -1,14 +1,9 @@
-import { DBService } from "./service"
-const routes = require("../scripts")
-const koaCompose = require("koa-compose")
-const envConfig = require("../config/config.env.js")
-
-const { als, useContext } = require("../Gganbu/hook")
-const { App, Router } = require("../Gganbu/model")
-
+import { als, useContext } from "./Gganbu/hook"
+import koaCompose from "koa-compose"
+import { App, createRouter } from "./Gganbu/model"
+import middleware from "./src/middleware"
 const main = async (app, port) => {
   try {
-    await DBService.connect() // 数据库连接
     app.use((ctx, next) => {
       als.run({ ctx: ctx }, async () => {
         // let ctx = als.getStore()
@@ -17,10 +12,15 @@ const main = async (app, port) => {
         await next()
       }) // sets default values
     })
-    app.use(koaCompose(Router)) // 注册路由
+    // 注册路由
+    const Router = await createRouter()
+    app.use(koaCompose(Router))
+    app.use(koaCompose(middleware))
+
+    // 启动
     const server = app.listen(port, () =>
       console.log(`项目启动, 端口：${port}, 环境：${process.env.NODE_ENV}`)
-    ) // 启动
+    )
 
     // pm2 平滑更新
     process.on("SIGINT", () => {
@@ -33,4 +33,4 @@ const main = async (app, port) => {
     console.log(err)
   }
 }
-main(App, envConfig.port)
+main(App, 7007)
