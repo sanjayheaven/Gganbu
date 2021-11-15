@@ -33,17 +33,4 @@ async function errorHandling(ctx, next) {
   }
 }
 
-export default [
-  logger,
-  errorHandling,
-  async (ctx, next) => {
-    console.log(ctx.request.body, ctx.request.rawBody, "请求前看一下")
-    await next()
-  },
-  bodyParser(),
-  async (ctx, next) => {
-    console.log(ctx.request.body, ctx.request.rawBody, "请求后看一下")
-    await next()
-  },
-  cors(),
-]
+export default [logger, errorHandling, bodyParser(), cors()]

@@ -7,6 +7,7 @@ import koaCompose from "koa-compose"
 import KoaRouter from "koa-router"
 import { listFiles, convertFileToRoute, mapReturnToCtxBody } from "./util"
 import { join, resolve } from "upath"
+import path from "upath"
 import { als, useContext } from "./hook"
 
 /**
@@ -35,7 +36,7 @@ const getSrcDirname = () => {
 /**
  * 动态引入文件
  */
-export const importAction = (filePath) => {
+export const importAction = async (filePath) => {
   // 如果是目录，那就查询 index.ts 文件
   // 如果是文件，那就查询文件
   return import(filePath)
@@ -104,9 +105,15 @@ export const Middleware = [] // 包括 als中间 全局中间件 路由中间件
 
 export const getMiddlerware = async () => {
   let srcDirname = getSrcDirname()
-  let middlewarePath = resolve("file://", srcDirname, "middleware")
+  let middlewarePath = join("file://", srcDirname, "middleware")
   console.log(srcDirname, 1919200000, middlewarePath)
-  return importAction(middlewarePath)
+  return await importAction(middlewarePath)
+}
+
+export const getMiddlerwareFromES = async () => {
+  let srcDirname = getSrcDirname()
+  let middlewarePath = join("./src/", "middleware")
+  return await importAction("../src/middleware/index.ts")
 }
 
 export const AppStart = async () => {
@@ -114,10 +121,14 @@ export const AppStart = async () => {
     await als.run({ ctx: ctx }, async () => {})
     await next()
   }
-  const Middleware = await getMiddlerware()
-  const Router = await createRouter()
+  let res = await import("../src/middleware/index.ts")
+  console.log(res, "看看res")
+  const Middleware = await importAction("../src/middleware/index.ts")
+  console.log(Middleware)
 
-  App.use(koaCompose([ALSMiddleware, ...Middleware.default, ...Router]))
+  // const Router = await createRouter()
+
+  // App.use(koaCompose([ALSMiddleware, ...Middleware.default, ...Router]))
 
   // 启动
   const server = App.listen(7006, () =>

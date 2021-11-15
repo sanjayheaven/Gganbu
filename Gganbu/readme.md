@@ -7,3 +7,5 @@
 可能在 server/controller 这样子 通过目录结构 强制性规范。。。
 
 ## 引入 AsyncLocalStorage 解决请求上下文共享的问题
+
+怎么 在 vite 那边 获取 controllers 的所有 acntion呢

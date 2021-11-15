@@ -11,7 +11,7 @@ const createApi = (exports, route, client = "'~/Gganbu/request'") => {
       console.log(url, name, typeof url, 1111)
       return `
           export async function ${name} (...args){
-            return await request({
+            return request({
               url:"/${url}",
               method: "${method}",
               data:{args}
