@@ -3,8 +3,6 @@ import { createApiSDK } from "./api"
 
 import { getControllers, Controller, App, AppStart } from "./model"
 
-console.log(Controller, "看看控制器")
-
 import { isApiFile } from "./util"
 export default function model() {
   const fieldId = "@Gganbu/model"

@@ -23,7 +23,7 @@ axios.interceptors.response.use(
 
 export const request = async (config) => {
   let response = await axios({
-    baseURL: "http://127.0.0.1:7007/api",
+    baseURL: "http://127.0.0.1:7006/api",
     timeout: 10000,
     // headers: { "Content-Type": "application/json" },
     ...config,

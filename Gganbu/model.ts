@@ -6,9 +6,10 @@ import Koa from "Koa"
 import koaCompose from "koa-compose"
 import KoaRouter from "koa-router"
 import { listFiles, convertFileToRoute, mapReturnToCtxBody } from "./util"
-import { join, resolve } from "upath"
-import path from "upath"
+import path, { join, resolve } from "upath"
 import { als, useContext } from "./hook"
+import fs from "fs"
+import createJITI from "jiti"
 
 /**
  * 返回结果：[Object]
@@ -33,13 +34,18 @@ const getSrcDirname = () => {
     resolve(fileDirName, "src")
   )
 }
+
 /**
  * 动态引入文件
  */
 export const importAction = async (filePath) => {
   // 如果是目录，那就查询 index.ts 文件
   // 如果是文件，那就查询文件
-  return import(filePath)
+  // return import(filePath)
+  const jiti = createJITI()
+  const contents = jiti(filePath)
+  if (contents.default) return contents.default
+  return contents
 }
 export const getControllers = () => {
   let srcDirname = getSrcDirname()
@@ -121,14 +127,11 @@ export const AppStart = async () => {
     await als.run({ ctx: ctx }, async () => {})
     await next()
   }
-  let res = await import("../src/middleware/index.ts")
-  console.log(res, "看看res")
-  const Middleware = await importAction("../src/middleware/index.ts")
-  console.log(Middleware)
+  const Router = await createRouter()
+  const Middleware = await getMiddlerware()
+  console.log(Controller, Router, Middleware)
 
-  // const Router = await createRouter()
-
-  // App.use(koaCompose([ALSMiddleware, ...Middleware.default, ...Router]))
+  App.use(koaCompose([ALSMiddleware, ...Middleware, ...Router]))
 
   // 启动
   const server = App.listen(7006, () =>
