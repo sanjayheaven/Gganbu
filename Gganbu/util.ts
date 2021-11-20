@@ -1,6 +1,8 @@
 import path, { extname, resolve, join, toUnix } from "upath"
-import fs from "fs"
+import fs, { existsSync } from "fs"
 import pluralize from "pluralize"
+import { sync } from "pkg-dir"
+import createJITI from "jiti"
 
 const isTsOrJsFile = (file) => {
   return [".ts", ".js"].includes(extname(file))
@@ -53,10 +55,40 @@ export const convertFileToRoute = (file) => {
  * 在一体化中，用return 值 来表示 ctx.body
  *
  */
-export const mapReturnToCtxBody = function (actionFn) {
+export const mapReturnToCtxBody = (actionFn) => {
   return async function (ctx) {
     // console.log(ctx.url, "看看action请求的url")
     let res = await actionFn()
     ctx.body = res
   }
+}
+
+/**
+ * 根据 package.json 找到项目根目录
+ */
+export const getProjectRoot = (cwd?: string) => {
+  return sync(cwd) || process.cwd()
+}
+
+/**
+ * 动态require文件 包含所有的了
+ */
+export const importFile = (filePath: string) => {
+  const jiti = createJITI()
+  const contents = jiti(filePath)
+  return contents
+}
+/**
+ * import file 相当于 requireFile 的default
+ */
+export const importFileDefault = (filePath: string) => {
+  const contents = importFile(filePath)
+  return contents.default || {}
+}
+
+/**
+ * 判断文件是否存在
+ */
+export const existFile = (filePath: string) => {
+  return existsSync(filePath)
 }

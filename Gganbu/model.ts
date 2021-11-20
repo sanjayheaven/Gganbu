@@ -5,21 +5,15 @@
 import Koa from "Koa"
 import koaCompose from "koa-compose"
 import KoaRouter from "koa-router"
-import { listFiles, convertFileToRoute, mapReturnToCtxBody } from "./util"
-import path, { join, resolve } from "upath"
-import { als, useContext } from "./hook"
-import fs from "fs"
+import {
+  listFiles,
+  convertFileToRoute,
+  mapReturnToCtxBody,
+  importFile,
+} from "./util"
+import { join, resolve } from "upath"
+import { als } from "./hook"
 import createJITI from "jiti"
-
-/**
- * 返回结果：[Object]
- * {
- *  path
- *  fileName
- *  app
- *  actions:{}
- * }
- */
 
 /**
  *  mapFnToCtxAction
@@ -35,18 +29,6 @@ const getSrcDirname = () => {
   )
 }
 
-/**
- * 动态引入文件
- */
-export const importAction = async (filePath) => {
-  // 如果是目录，那就查询 index.ts 文件
-  // 如果是文件，那就查询文件
-  // return import(filePath)
-  const jiti = createJITI()
-  const contents = jiti(filePath)
-  if (contents.default) return contents.default
-  return contents
-}
 export const getControllers = () => {
   let srcDirname = getSrcDirname()
   let controllerPath = resolve(srcDirname, "controller")
@@ -59,7 +41,7 @@ export const getControllers = () => {
 export const getRoutes = async (controllers) => {
   return controllers.reduce(async (acc, controller) => {
     let { fileName, filePath } = controller
-    let actionObj = await importAction(filePath)
+    let actionObj = await importFile(filePath)
     let routes = Object.keys(actionObj).map((key) => {
       return {
         path: "/" + key,
@@ -112,14 +94,13 @@ export const Middleware = [] // 包括 als中间 全局中间件 路由中间件
 export const getMiddlerware = async () => {
   let srcDirname = getSrcDirname()
   let middlewarePath = join("file://", srcDirname, "middleware")
-  console.log(srcDirname, 1919200000, middlewarePath)
-  return await importAction(middlewarePath)
+  return await importFile(middlewarePath)
 }
 
 export const getMiddlerwareFromES = async () => {
   let srcDirname = getSrcDirname()
   let middlewarePath = join("./src/", "middleware")
-  return await importAction("../src/middleware/index.ts")
+  return await importFile("../src/middleware/index.ts")
 }
 
 export const AppStart = async () => {
