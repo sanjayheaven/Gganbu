@@ -8,9 +8,11 @@ Gganbu 致力于提效全栈开发的 Nodejs 框架。
 
 ## 特性
 
-- 前后端一体化开发
-- 零 Api 调用，零 Route 配置
-- 基于 Vite + TypeScript 开发
+- 前后端一体化开发，在 src 一个目录下开发前后端代码
+- 零 Api 调用，从 controller（可配置）目录 引入函数，调用自动转换为 Api 请求
+- 零 Route 配置，按照文件所在路径 自动配置 Route
+- 基于 Vite + TypeScript 开发，支持 React/Vue 等框架
+-
 
 ## 示例
 
