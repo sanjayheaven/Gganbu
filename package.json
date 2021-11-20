@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
-    "start": "set NODE_ENV=development&&nodemon server.ts"
+    "build:client": "vite build",
+    "serve": "vite preview"
   },
   "repository": {
     "type": "git",
