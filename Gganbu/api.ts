@@ -18,7 +18,7 @@ const createApi = (exports, route, client = "'~/Gganbu/request'") => {
       return `
           export async function ${name} (...args){
             return request({
-              url:"/${url}",
+              url:"${url}",
               method: "${method}",
               data:{args}
             })
@@ -34,6 +34,5 @@ export const createApiSDK = async (code, file) => {
   await init
   const [imports, exports] = parse(code)
   let route = convertFileToRoute(file)
-  const api = createApi(exports, route)
-  return api
+  return createApi(exports, route)
 }

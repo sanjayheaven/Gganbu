@@ -4,8 +4,10 @@ let AsyncLocalStorage = alshooks.AsyncLocalStorage
 export const als = new AsyncLocalStorage()
 
 export const useContext = () => {
-  return als.getStore()["ctx"]
+  let store = als.getStore()
+  console.log(store, 1234442222, "hook")
+  return (als.getStore() || {})["ctx"]
 }
-export const useConfig = () => {
-  return als.getStore()["config"]
-}
+// export const useConfig = () => {
+//   return als.getStore()["config"]
+// }

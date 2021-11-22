@@ -15,7 +15,10 @@ export const isTsOrJsFile = (file) => {
 
 export const isApiFile = (file) => {
   // 判断是不是属于 controller下的js文件
-  if (file.indexOf("/src/controller") == -1) return false
+  let root = getProjectRoot()
+  let { controllerDirname } = getProjectConfig()
+  let fullControllerDirname = resolve(root, controllerDirname)
+  if (file.indexOf(fullControllerDirname) == -1) return false
   if (!isTsOrJsFile(file)) return false
   return true
 }
@@ -48,7 +51,6 @@ export const convertFileToRoute = (file) => {
   const root = getProjectRoot()
   const { controllerDirname } = getProjectConfig()
   let fullControllerDirname = resolve(root, controllerDirname)
-  console.log(file, 1999999, controllerDirname, fullControllerDirname)
   let splitArr = file.split(fullControllerDirname)
   let fileSplit = splitArr[1].split("/")
   let lastItem = fileSplit[fileSplit.length - 1]
@@ -81,7 +83,6 @@ export const getProjectRoot = (cwd?: string) => {
  * 动态require文件 包含所有的了
  */
 export const importFile = (filePath: string) => {
-  console.log(filePath, "读取的文件")
   const jiti = createJITI()
   const contents = jiti(filePath)
   // if ("default" in contents) return contents.default

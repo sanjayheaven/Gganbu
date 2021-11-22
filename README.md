@@ -2,14 +2,14 @@
 
 <p align="center">Gganbu - 一体化 Web 开发框架 </p>
 
-Gganbu 致力于提效全栈开发的 Nodejs 框架。  
-目前 Gganbu 基于 Koa 作为 Server 框架，能够与 React 和 Vue 集成。  
+Gganbu 是致力于提效全栈开发的 Nodejs 框架。  
+目前 Gganbu 基于 Koa 作为 Server 框架，前端部分能够与 React 和 Vue 集成。  
 当前 Git 库是 Vue3 的项目模板，核心库还未分离。
 
 ## 特性
 
 - 前后端一体化开发，在 src 一个目录下开发前后端代码
-- 零 Api 调用，从 controller（可配置）目录 引入函数，调用自动转换为 Api 请求
+- 零 Api 调用，从 controller（可配置）目录 引入函数，调用函数自动转换为 Api 请求
 - 零 Route 配置，按照文件所在路径 自动配置 Route
 - 基于 Vite + TypeScript 开发，支持 React/Vue 等框架
 -
@@ -48,7 +48,12 @@ Gganbu 对中间件的处理 也同样分为三类：
 
 全局中间件 在 src/controller/configuration.ts 中配置。
 
-## 文件中间件
+```
+import {createConfiguration} from './Gganbu/model'
+
+```
+
+### 文件中间件
 
 文件级的中间件在 Controller 文件中定义，能对该文件内所有的函数生效。
 用法如下：
@@ -59,15 +64,13 @@ export const config = {
 }
 ```
 
-## 路由中间件
+### 路由中间件
 
 单个路由级别的中间件，采用 **withController** 来加载中间件
 第一个参数是 中间件 配置，第二个参数是要执行的 Controller Action。
 
 ```js
-export const getInfo = withController({ middlewares: [] }, () => {
-  
-})
+export const getInfo = withController({ middlewares: [] }, () => {})
 ```
 
 ## 打包

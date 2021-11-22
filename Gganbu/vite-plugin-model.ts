@@ -1,7 +1,7 @@
 // 这是在node环境下运行的。 consolelog 在控制看 不在浏览器。
 import { createApiSDK } from "./api"
 
-import { getControllers, Controller, App, AppStart } from "./model"
+import { AppStart } from "./model"
 
 import { isApiFile } from "./util"
 export default function model() {

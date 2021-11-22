@@ -3,7 +3,7 @@
  * 怎么能确保在任何地方导入 都能读取到 指定Controller、
  */
 import Koa from "Koa"
-import koaCompose from "koa-compose"
+import KoaCompose from "koa-compose"
 import KoaRouter from "koa-router"
 import {
   listFiles,
@@ -14,9 +14,10 @@ import {
   isFn,
 } from "./util"
 import { join, resolve } from "upath"
-import { als } from "./hook"
-import { getProjectConfig } from "./config"
+import { als, useContext } from "./hook"
+import { getProjectConfig, getServerConfig } from "./config"
 import { Route, Controller } from "./types/model"
+import { getGlobalMiddlewares, withController } from "./middleware"
 
 export const getControllers = (): Controller[] => {
   const projectRoot = getProjectRoot()
@@ -31,12 +32,13 @@ export const getControllers = (): Controller[] => {
 export const getRoutes = (controllers: Controller[]): Route[] => {
   return controllers.reduce((acc, controller: Controller) => {
     let { fileName, filePath, exports } = controller
+    let { middlewares = [] } = exports["config"] || {}
     Object.keys(exports).forEach((i) => !isFn(exports[i]) && delete exports[i])
     let routes = Object.keys(exports).map((key) => {
       return {
         path: "/" + key,
         method: (key.startsWith("get") && "GET") || "POST",
-        middlewares: [], // 文件的路由信息
+        middlewares: middlewares, // 文件的配置路由信息
         fileName: fileName,
         actionName: key,
         controllerPath: filePath,
@@ -47,12 +49,13 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
   }, [])
 }
 
-const getRouter = (routes: Route[]) => {
+const getRouters = (routes: Route[]) => {
   let { routerPrefix } = getProjectConfig()
   return routes.reduce((acc, route: Route) => {
-    let { controllerPath, controllerAction } = route
+    let { controllerPath, controllerAction, middlewares } = route
     let name = convertFileToRoute(controllerPath)
     let router = new KoaRouter({ prefix: join(routerPrefix, name) })
+    let wrapMiddlewares = withController({ middlewares }, controllerAction)
     if (route.method == "GET") {
       router.get(route.path, mapReturnToCtxBody(controllerAction))
     } else {
@@ -67,20 +70,28 @@ const getRouter = (routes: Route[]) => {
 export const createRouter = () => {
   let controllers = getControllers()
   let routes = getRoutes(controllers)
-  console.log(routes, "路由信息")
-  return getRouter(routes)
+  return getRouters(routes)
 }
 
 export const App = new Koa()
 
 export const AppStart = async () => {
   const routers = createRouter()
-  const ALSMiddleware = async (ctx, next) => {
-    await als.run({ ctx: ctx }, async () => {})
-    await next()
-  }
+  // App.use(async (ctx, next) => {
+  //   await als.run({ ctx: ctx }, async () => {
+  //     let res = useContext()
+  //     console.log(res && res.url, "在这之前的")
+  //     await next()
+  //     console.log(res && res.url, "返回的值得")
+  //   })
+  // })
 
-  App.use(koaCompose([ALSMiddleware, ...routers]))
+  // 加载全局中间件
+  let { middlewares = [] } = getServerConfig()
+  console.log(middlewares, "全局中间件的设置", getServerConfig())
+  // let globalMiddlewares = getGlobalMiddlewares()
+  // console.log(globalMiddlewares, "全局中间件")
+  App.use(KoaCompose([...middlewares, ...routers]))
 
   // 启动
   const server = App.listen(7006, () =>
@@ -95,7 +106,6 @@ export const AppStart = async () => {
     })
   })
 }
-
 
 // app 启动
 // 加载中间件
