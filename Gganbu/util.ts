@@ -3,8 +3,13 @@ import fs, { existsSync } from "fs"
 import pluralize from "pluralize"
 import { sync } from "pkg-dir"
 import createJITI from "jiti"
+import { getProjectConfig } from "./config"
 
-const isTsOrJsFile = (file) => {
+export const isFn = (item) => {
+  let value = Object.prototype.toString.call(item)
+  return ["[object Function]", "[object AsyncFunction]"].includes(value)
+}
+export const isTsOrJsFile = (file) => {
   return [".ts", ".js"].includes(extname(file))
 }
 
@@ -40,15 +45,18 @@ export const listFiles = (currentDirPath) => {
  * ---->  manage/orders
  */
 export const convertFileToRoute = (file) => {
-  let splitArr = file.split("/")
-  let sliceArr = splitArr.slice(splitArr.indexOf("controller") + 1)
-  let length = sliceArr.length
-  let lastItem = sliceArr[length - 1]
+  const root = getProjectRoot()
+  const { controllerDirname } = getProjectConfig()
+  let fullControllerDirname = resolve(root, controllerDirname)
+  console.log(file, 1999999, controllerDirname, fullControllerDirname)
+  let splitArr = file.split(fullControllerDirname)
+  let fileSplit = splitArr[1].split("/")
+  let lastItem = fileSplit[fileSplit.length - 1]
   if (isTsOrJsFile(file)) {
     lastItem = lastItem.substring(0, lastItem.indexOf(".")) // 去除js后缀
   }
-  sliceArr.splice(length - 1, 1, pluralize(lastItem)) // 替换原来的最后一项
-  return sliceArr.join("/")
+  fileSplit.splice(fileSplit.length - 1, 1, pluralize(lastItem)) // 替换原来的最后一项
+  return fileSplit.join("/")
 }
 
 /**
@@ -57,7 +65,6 @@ export const convertFileToRoute = (file) => {
  */
 export const mapReturnToCtxBody = (actionFn) => {
   return async function (ctx) {
-    // console.log(ctx.url, "看看action请求的url")
     let res = await actionFn()
     ctx.body = res
   }
@@ -74,12 +81,14 @@ export const getProjectRoot = (cwd?: string) => {
  * 动态require文件 包含所有的了
  */
 export const importFile = (filePath: string) => {
+  console.log(filePath, "读取的文件")
   const jiti = createJITI()
   const contents = jiti(filePath)
+  // if ("default" in contents) return contents.default
   return contents
 }
 /**
- * import file 相当于 requireFile 的default
+ * import file 相当于 importFile 的default
  */
 export const importFileDefault = (filePath: string) => {
   const contents = importFile(filePath)

@@ -13,14 +13,13 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "jsx": "preserve",
-    // "experimentalDecorators": true,
-    // "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "types": ["vite/client", "Node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "~/*": ["*"],
-      "Gganbu": ["Gganbu/*"]
     }
   },
   // "include": ["./src"],

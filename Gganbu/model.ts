@@ -10,70 +10,53 @@ import {
   convertFileToRoute,
   mapReturnToCtxBody,
   importFile,
+  getProjectRoot,
+  isFn,
 } from "./util"
 import { join, resolve } from "upath"
 import { als } from "./hook"
-import createJITI from "jiti"
+import { getProjectConfig } from "./config"
+import { Route, Controller } from "./types/model"
 
-/**
- *  mapFnToCtxAction
- *  将 controller 当中的普通函数 转换成 带有请求上下文的
- *  约定好，返回值，即是，请求上下问返回体
- */
-const getSrcDirname = () => {
-  let fileDirName = process.cwd()
-  let index = fileDirName.indexOf("src")
-  return (
-    (index !== -1 && fileDirName.substring(0, index + 3)) ||
-    resolve(fileDirName, "src")
-  )
-}
-
-export const getControllers = () => {
-  let srcDirname = getSrcDirname()
-  let controllerPath = resolve(srcDirname, "controller")
+export const getControllers = (): Controller[] => {
+  const projectRoot = getProjectRoot()
+  const { controllerDirname } = getProjectConfig()
+  let controllerPath = resolve(projectRoot, controllerDirname)
   let files = listFiles(controllerPath)
   return files.map((file) => {
-    return { ...file }
+    return { ...file, exports: importFile(file.filePath) }
   })
 }
 
-export const getRoutes = async (controllers) => {
-  return controllers.reduce(async (acc, controller) => {
-    let { fileName, filePath } = controller
-    let actionObj = await importFile(filePath)
-    let routes = Object.keys(actionObj).map((key) => {
+export const getRoutes = (controllers: Controller[]): Route[] => {
+  return controllers.reduce((acc, controller: Controller) => {
+    let { fileName, filePath, exports } = controller
+    Object.keys(exports).forEach((i) => !isFn(exports[i]) && delete exports[i])
+    let routes = Object.keys(exports).map((key) => {
       return {
         path: "/" + key,
         method: (key.startsWith("get") && "GET") || "POST",
-        middlewares: [],
+        middlewares: [], // 文件的路由信息
         fileName: fileName,
-        controllerPath: filePath,
         actionName: key,
-        // action: actionObj[key],
-        actionFn: actionObj[key],
+        controllerPath: filePath,
+        controllerAction: exports[key],
       }
     })
-    acc = [...acc, ...routes]
-    return acc
+    return [...acc, ...routes]
   }, [])
 }
 
-// const { routerPrefix } = require("../config/config.router.js")
-
-const routerPrefix = "/api"
-export const getRouter = (routes) => {
-  return routes.reduce((acc, route) => {
-    let { fileName, controllerPath, actionFn } = route
+const getRouter = (routes: Route[]) => {
+  let { routerPrefix } = getProjectConfig()
+  return routes.reduce((acc, route: Route) => {
+    let { controllerPath, controllerAction } = route
     let name = convertFileToRoute(controllerPath)
-
-    let prefix = join(routerPrefix, name)
-    let router = new KoaRouter({ prefix })
-
+    let router = new KoaRouter({ prefix: join(routerPrefix, name) })
     if (route.method == "GET") {
-      router.get(route.path, mapReturnToCtxBody(actionFn))
+      router.get(route.path, mapReturnToCtxBody(controllerAction))
     } else {
-      router.post(route.path, mapReturnToCtxBody(actionFn))
+      router.post(route.path, mapReturnToCtxBody(controllerAction))
     }
     acc.push(router.routes())
     acc.push(router.allowedMethods())
@@ -81,38 +64,23 @@ export const getRouter = (routes) => {
   }, [])
 }
 
-export const Controller = getControllers()
-export const createRouter = async () => {
-  const Route = await getRoutes(Controller)
-  return getRouter(Route)
+export const createRouter = () => {
+  let controllers = getControllers()
+  let routes = getRoutes(controllers)
+  console.log(routes, "路由信息")
+  return getRouter(routes)
 }
 
 export const App = new Koa()
 
-export const Middleware = [] // 包括 als中间 全局中间件 路由中间件
-
-export const getMiddlerware = async () => {
-  let srcDirname = getSrcDirname()
-  let middlewarePath = join("file://", srcDirname, "middleware")
-  return await importFile(middlewarePath)
-}
-
-export const getMiddlerwareFromES = async () => {
-  let srcDirname = getSrcDirname()
-  let middlewarePath = join("./src/", "middleware")
-  return await importFile("../src/middleware/index.ts")
-}
-
 export const AppStart = async () => {
+  const routers = createRouter()
   const ALSMiddleware = async (ctx, next) => {
     await als.run({ ctx: ctx }, async () => {})
     await next()
   }
-  const Router = await createRouter()
-  const Middleware = await getMiddlerware()
-  console.log(Controller, Router, Middleware)
 
-  App.use(koaCompose([ALSMiddleware, ...Middleware, ...Router]))
+  App.use(koaCompose([ALSMiddleware, ...routers]))
 
   // 启动
   const server = App.listen(7006, () =>
@@ -127,6 +95,8 @@ export const AppStart = async () => {
     })
   })
 }
+
+
 // app 启动
 // 加载中间件
 //

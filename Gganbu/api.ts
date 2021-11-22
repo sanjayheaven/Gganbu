@@ -15,7 +15,6 @@ const createApi = (exports, route, client = "'~/Gganbu/request'") => {
     .map((name) => {
       let url = join(route, name)
       let method = (name.startsWith("get") && "get") || "post"
-      console.log(url, name, typeof url, 1111)
       return `
           export async function ${name} (...args){
             return request({

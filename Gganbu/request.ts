@@ -1,7 +1,6 @@
 import axios from "axios"
 axios.interceptors.request.use(
   function (config) {
-    console.log(config, "请求配置")
     return config
   },
   function (error) {
@@ -16,7 +15,6 @@ axios.interceptors.response.use(
   },
   function (error) {
     // 对响应错误做点什么
-    console.log(error, "请求报错")
     return Promise.reject(error)
   }
 )
@@ -28,6 +26,5 @@ export const request = async (config) => {
     // headers: { "Content-Type": "application/json" },
     ...config,
   })
-  console.log(response, 11111, "看看返沪得信息")
   return response.data
 }

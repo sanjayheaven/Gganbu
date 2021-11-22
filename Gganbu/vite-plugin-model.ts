@@ -25,7 +25,6 @@ export default function model() {
       await AppStart()
       server.middlewares.use(async (req, res, next) => {
         // 自定义请求处理...
-        // console.log("req, res, next", req.url)
         next()
       })
     },
