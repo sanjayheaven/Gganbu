@@ -8,14 +8,13 @@ import KoaRouter from "koa-router"
 import {
   listFiles,
   convertFileToRoute,
-  mapReturnToCtxBody,
   importFile,
   getProjectRoot,
   isFn,
+  proxyController,
 } from "./util"
 import { join, resolve } from "upath"
-import { als, useContext } from "./hook"
-import { getProjectConfig, getServerConfig } from "./config"
+import { getProjectConfig } from "./config"
 import { Route, Controller } from "./types/model"
 import { getGlobalMiddlewares, withController } from "./middleware"
 
@@ -24,6 +23,7 @@ export const getControllers = (): Controller[] => {
   const { controllerDirname } = getProjectConfig()
   let controllerPath = resolve(projectRoot, controllerDirname)
   let files = listFiles(controllerPath)
+  files = files.filter((i) => i.filePath.indexOf("configuration") == -1)
   return files.map((file) => {
     return { ...file, exports: importFile(file.filePath) }
   })
@@ -38,7 +38,7 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
       return {
         path: "/" + key,
         method: (key.startsWith("get") && "GET") || "POST",
-        middlewares: middlewares, // 文件的配置路由信息
+        fileMiddlewares: middlewares, // 文件的配置路由信息
         fileName: fileName,
         actionName: key,
         controllerPath: filePath,
@@ -52,14 +52,16 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
 const getRouters = (routes: Route[]) => {
   let { routerPrefix } = getProjectConfig()
   return routes.reduce((acc, route: Route) => {
-    let { controllerPath, controllerAction, middlewares } = route
+    let { controllerPath, controllerAction, fileMiddlewares } = route
     let name = convertFileToRoute(controllerPath)
     let router = new KoaRouter({ prefix: join(routerPrefix, name) })
-    let wrapMiddlewares = withController({ middlewares }, controllerAction)
+    let wrappedAction = withController({ middlewares: [] }, controllerAction)
+    let routeMiddlewares = wrappedAction.routeMiddlewares || []
+    let proxy = proxyController(wrappedAction)
     if (route.method == "GET") {
-      router.get(route.path, mapReturnToCtxBody(controllerAction))
+      router.get(route.path, ...fileMiddlewares, ...routeMiddlewares, proxy)
     } else {
-      router.post(route.path, mapReturnToCtxBody(controllerAction))
+      router.post(route.path, ...fileMiddlewares, ...routeMiddlewares, proxy)
     }
     acc.push(router.routes())
     acc.push(router.allowedMethods())
@@ -74,7 +76,7 @@ export const createRouter = () => {
 }
 
 export const App = new Koa()
-
+let server
 export const AppStart = async () => {
   const routers = createRouter()
   // App.use(async (ctx, next) => {
@@ -87,16 +89,16 @@ export const AppStart = async () => {
   // })
 
   // 加载全局中间件
-  let { middlewares = [] } = getServerConfig()
-  console.log(middlewares, "全局中间件的设置", getServerConfig())
-  // let globalMiddlewares = getGlobalMiddlewares()
-  // console.log(globalMiddlewares, "全局中间件")
+  let middlewares = getGlobalMiddlewares()
+
   App.use(KoaCompose([...middlewares, ...routers]))
 
   // 启动
-  const server = App.listen(7006, () =>
-    console.log(`项目启动, 端口：${7006}, 环境：${process.env.NODE_ENV}`)
-  )
+  if (!server) {
+    server = App.listen(7006, () =>
+      console.log(`项目启动, 端口：${7006}, 环境：${process.env.NODE_ENV}`)
+    )
+  }
 
   // pm2 平滑更新
   process.on("SIGINT", () => {
@@ -106,7 +108,21 @@ export const AppStart = async () => {
     })
   })
 }
+export const AppRestart = async () => {
+  await server.close(async () => {
+    console.log("server，成功关闭")
+    server = null
+    await AppStart()
+  })
+}
 
+export const AppClose = async () => {
+  if (server) {
+    await server.close(() => {
+      server = null
+    })
+  }
+}
 // app 启动
 // 加载中间件
 //

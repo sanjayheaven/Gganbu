@@ -33,7 +33,6 @@ export const getServerConfig = (): ServerConfig => {
   let configFilePath =
     (existFile(configJs) && configJs) || (existFile(configTs) && configTs) || ""
   if (!configFilePath) return {}
-  console.log(configFilePath, 292929990000, "文件路径")
   return importFileDefault(configFilePath)
 }
 

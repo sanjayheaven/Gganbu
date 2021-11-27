@@ -1,23 +1,33 @@
 import middleware from "@/middleware"
 import KoaCompose from "koa-compose"
 import { getServerConfig } from "./config"
-import { mapReturnToCtxBody } from "./util"
+import { ControllerAction } from "./types/model"
+import { isFn, proxyController } from "./util"
 /**
- * 单函数中间件 需要返回一个函数
+ * 路由中间件 routeMiddlewares
+ * 给接口增加 属性 routeMiddlewares
  */
-export const withController = (config, controllerAction) => {
+
+export const withController = (config, controllerAction: ControllerAction) => {
   let { middlewares = [] } = config
-  //   return KoaCompose(
-  //     [...middlewares, controllerAction].map((i) => mapReturnToCtxBody(i))
-  //   )
-  return KoaCompose([...middlewares, mapReturnToCtxBody(controllerAction)])
+  controllerAction.routeMiddlewares = [
+    ...middlewares,
+    ...(controllerAction.routeMiddlewares || []),
+  ]
+  return controllerAction
 }
+
+/**
+ * 文件中间件 fileMiddlewares
+ *
+ */
+
+// 在路由解析中，对 exports['config'] 中的 middlewares 即为 fileMiddlewares
 
 /**
  * 全局中间件
  */
 export const getGlobalMiddlewares = () => {
   let { middlewares = [] } = getServerConfig()
-  console.log(middlewares, "看看中间件")
   return middlewares
 }

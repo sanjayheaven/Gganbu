@@ -100,3 +100,10 @@ npm run build:server
 ```
 
 打包结果在 dist 文件夹中。
+
+## 其他
+
+- 现在 server 的代码 是 **热重启**，看看以后能不能做到 **热更新**
+- 如果以后 ts 出现函数的装饰器 @，而不是类方法的，可能替换掉一些 hoc 操作。
+  - 关于 [为什么装饰器不能用于函数？](https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-decorator.md)
+/src/api/manage/order.ts?t=1637727018245

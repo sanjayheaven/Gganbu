@@ -6,39 +6,38 @@ import { withController } from "../../../Gganbu/middleware"
 // const loadMiddleware = (middlewares, func) => {
 //   await compose([...middlewares, mafunc])
 // }
-// const logger = async (next) => {
-//   const ctx = useContext()
-//   const start = Date.now()
-//   await next()
-//   const cost = Date.now() - start
-//   console.log(`request ${ctx.url} cost ${cost}ms`)
-// }
+const logger = async (ctx, next) => {
+  const start = Date.now()
+  console.log("日志开始", ctx.url)
+  await next()
+  const cost = Date.now() - start
+  console.log(`request ${ctx.url} cost ${cost}ms`)
+}
 // // @loadMiddleware
-// export const getInfo = withController({ middlewares: [logger] }, async () => {
-//   return {
-//     data: "这是 getInfo 函数的返回结果11111",
-//     msg: "OK1111111111",
-//   }
-// })
+export const getInfoWithController = withController(
+  { middlewares: [logger] },
+  async () => {
+    return {
+      data: "这是 getInfoWithController 函数的返回结果11111",
+      msg: "OK111",
+    }
+  }
+)
 export const getInfo = async () => {
-  // const [ctx, setCtx] = useCtx()
-  // let res = await orderService.getOrders()
-  // const context = useContext()
-  // console.log(context.url, 292929929)
   return {
-    data: "这是 getInfo 函数的返回结果",
-    msg: "OK1111111111",
+    data: "getIn11111",
+    msg: "test1223",
   }
 }
 
 export const createOrder = async (info) => {
   return {
     data: info,
-    msg: "创建成功",
+    msg: "测试一样更新33",
   }
 }
-// export const updateOrder = async () => {}
-// export const deleteOrder = async () => {}
+// // export const updateOrder = async () => {}
+// // export const deleteOrder = async () => {}
 
 export default () => {
   console.log("export default")

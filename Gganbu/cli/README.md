@@ -12,3 +12,19 @@
 - 启动命令
 - 关闭命令
 - 检测端口，重新分配端口
+
+## bug
+
+### fork 第一个参数报错找不到路径
+
+直接 用 vite 调用这个 cli 模块，
+报错 **Cannot find module 'D:\Github\Gganbu\Gganbu\cli\child'**  
+可能是需要这个包单独先发布。
+
+**解决方案**
+
+采用 JITI 库，引入 **childModule.js** 注意是 **js** 文件。 在这个文件中，采用 **cjs** 写法。
+
+### 每次修改监听文件，watcher 重启太多次了
+
+回调被多次调用，好像是有规律的成倍数增加

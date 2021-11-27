@@ -12,3 +12,5 @@ declare module "koaBodyParser"
 declare module "koa2-cors"
 
 declare module "Gganbu/*"
+
+declare module "*/cli/child"

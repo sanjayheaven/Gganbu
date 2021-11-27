@@ -2,11 +2,7 @@
  *
  */
 
-enum HTTPMETHOD {
-  GET = "GET",
-  POST = "POST",
-}
-
+export type HTTPMETHOD = "GET" | "POST"
 /**
  * Controller 控制器
  */
@@ -23,10 +19,18 @@ export interface Controller {
 export interface Route {
   path?: string
   method?: HTTPMETHOD
-  middlewares?: []
+  fileMiddlewares?: []
   fileName?: string // 文件名字
   actionName?: string
   controllerPath?: string
-  controllerAction?: any
+  controllerAction?: ControllerAction
 }
-// type Middleware  = 
+
+/**
+ * controller 文件中的 函数
+ */
+export interface ControllerAction {
+  (...arges: any[]): any
+  hasProxyed?: Boolean // 用来标记 是否代理过 proxyController
+  routeMiddlewares?: any[] // 判断是否有中间件，有就先组合
+}

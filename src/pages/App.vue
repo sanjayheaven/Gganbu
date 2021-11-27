@@ -3,11 +3,10 @@ import { onMounted } from "vue"
 import { getInfo } from "../api/manage/order"
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-console.log(getInfo, 292929)
 onMounted(async () => {
   try {
     let res = await getInfo()
-    console.log(res, 111)
+    console.log(JSON.stringify(res), 111)
   } catch (err) {
     console.log(err)
   }

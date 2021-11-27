@@ -4,10 +4,13 @@ import pluralize from "pluralize"
 import { sync } from "pkg-dir"
 import createJITI from "jiti"
 import { getProjectConfig } from "./config"
+import { ControllerAction } from "./types/model"
+const jiti = createJITI(process.cwd(), { cache: false })
 
 export const isFn = (item) => {
-  let value = Object.prototype.toString.call(item)
-  return ["[object Function]", "[object AsyncFunction]"].includes(value)
+  return typeof item === "function"
+  // let value = Object.prototype.toString.call(item)
+  // return ["[object Function]", "[object AsyncFunction]"].includes(value)
 }
 export const isTsOrJsFile = (file) => {
   return [".ts", ".js"].includes(extname(file))
@@ -15,6 +18,8 @@ export const isTsOrJsFile = (file) => {
 
 export const isApiFile = (file) => {
   // 判断是不是属于 controller下的js文件
+  // 存在这种情况 D:/Github/Gganbu/src/api/manage/order.ts?t=1637686059242
+
   let root = getProjectRoot()
   let { controllerDirname } = getProjectConfig()
   let fullControllerDirname = resolve(root, controllerDirname)
@@ -65,10 +70,12 @@ export const convertFileToRoute = (file) => {
  * 在一体化中，用return 值 来表示 ctx.body
  *
  */
-export const mapReturnToCtxBody = (actionFn) => {
+export const proxyController = (
+  actionFn: ControllerAction
+): ControllerAction => {
   return async function (ctx) {
     let res = await actionFn()
-    ctx.body = res
+    ctx["body"] = res
   }
 }
 
@@ -80,12 +87,10 @@ export const getProjectRoot = (cwd?: string) => {
 }
 
 /**
- * 动态require文件 包含所有的了
+ * 动态require文件 包含所有的了 文件只能读取一次 所以需要加一个缓存了
  */
 export const importFile = (filePath: string) => {
-  const jiti = createJITI()
   const contents = jiti(filePath)
-  // if ("default" in contents) return contents.default
   return contents
 }
 /**
