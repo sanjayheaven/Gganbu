@@ -1,4 +1,3 @@
-// 这是在node环境下运行的。 consolelog 在控制看 不在浏览器。
 import { createApiSDK } from "./api"
 import { start } from "./cli"
 import { isApiFile } from "./util"
@@ -19,9 +18,7 @@ export default function model() {
       })
     },
     config() {
-      return {
-        logLevel: "silent",
-      }
+      return { logLevel: "silent" }
     },
   }
 }

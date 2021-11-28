@@ -9,8 +9,6 @@
  */
 const createJiti = require("jiti")
 let jiti = createJiti(process.cwd(), { cache: false })
-// let contents = jiti("../model")
-// console.log(contents,111112222)
 const MODELPATH = process.env.MODELPATH // 新建子进程的时候 创建的。
 const { AppStart } = jiti(MODELPATH)
 
