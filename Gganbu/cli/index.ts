@@ -1,30 +1,29 @@
 import * as chokidar from "chokidar"
 import { join, relative, resolve } from "upath"
-import { getProjectConfig } from "../config"
+import { getProjectConfig, getResolvedControllerDir, getResolvedSrcDir } from "../config"
 import { getProjectRoot } from "../util"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
-import ora from "ora" // 控制台交互 终端转轮
+import Spin from "light-spinner"
+import * as chalk from "chalk"
+import { ProcessMessage } from "../types/cli"
+const Spinner = new Spin({ text: "Gganbu Starting" })
 
-const spinner = ora("Loading unicorns").start()
-
-// 状态
+// 状态库
 let state = {
   restarting: false,
+  hasStarted: false, // 是否启动过 // 标价区分 第一次和重启的区别
   // 这里重启标记 不能在 restart之后标记，事件循环机制不能及时更新，要在forked on message 之后标记为false。
+  hasWatched: false, // 是否开启过监听
 }
+
 let forked
-let hasWathched // 是否已经开启 监听
 
 export const startWatch = () => {
-  let root = getProjectRoot()
-  let serverConfig = getProjectConfig()
-  let { controllerDirname } = serverConfig
-  let controllerDir = join(root, controllerDirname)
-
+  let resolvedSrcDir = getResolvedSrcDir()
   const watchAllowExts = [].concat(".ts")
-
-  const watcher = chokidar.watch(controllerDir, {
+  
+  const watcher = chokidar.watch(resolvedSrcDir, {
     ignored: (path, fsStats) => {
       if (path.includes("node_modules")) {
         return true
@@ -40,42 +39,53 @@ export const startWatch = () => {
     persistent: true,
     ignoreInitial: true, // 初始加载文件算一次变化，这个必须关掉。不管就是多少文件就有多少变化
   })
+  state.hasWatched = true
   watcher.on("all", (event, fileName) => {
     if (state.restarting) return true
     state.restarting = true
     restart().then(() => {
-      console.log(`事件：${event}, 文件：${relative(controllerDir, fileName)}`)
+      let eventPath = `[${event}] ${relative(resolvedSrcDir, fileName)}`
+      console.log(`[ Gganbu ] Auto reload. ${chalk.hex("#666666")(eventPath)}`)
     })
   })
 }
 
 export const close = async () => {
+  Spinner.stop()
+
   if (forked?.kill) {
     forked.kill()
   }
   forked = null
 }
 export const start = async () => {
-  // 新开一个进程用来启动 AppStart
-  let childPath = join(__dirname, "./childModule")
-  let MODELPATH = resolve(__dirname, "../model")
-  forked = fork(childPath, [], {
-    cwd: getProjectRoot(),
-    env: {
-      MODELPATH,
-    },
-  })
-  forked.on("message", (msg) => {
-    if (msg.type == "started") {
-      state.restarting = false
-      console.log("重启成功")
-    }
-  })
-  if (!hasWathched) {
+  if (!state.hasWatched) {
     startWatch()
   }
+  let childPath = join(__dirname, "./childModule")
+  let MODELPATH = resolve(__dirname, "../model")
+  return new Promise<void>(async (resolve) => {
+    Spinner.start()
+    forked = fork(childPath, [], {
+      cwd: getProjectRoot(),
+      env: {
+        MODELPATH,
+      },
+    })
+    forked.on("message", (msg: ProcessMessage) => {
+      if (msg.type == "started") {
+        state.hasStarted = true // 启动过一次 第一次
+        Spinner.stop()
+        state.restarting = false
+      }
+      resolve()
+    })
+  })
 }
+
 export const restart = async () => {
   await close()
   await start()
+
+  // return new Promise(() => {})
 }
