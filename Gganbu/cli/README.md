@@ -27,4 +27,5 @@
 
 ### 每次修改监听文件，watcher 重启太多次了
 
-回调被多次调用，好像是有规律的成倍数增加
+这是因为 node 的事件循环机制，原先在 restart 之后 标记 restarting 为 false，导致不及时。  
+需要 监听子进程完成任务，forke.on('message'),这之后再标记 restarting 为 false

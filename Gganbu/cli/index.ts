@@ -4,13 +4,18 @@ import { getProjectConfig } from "../config"
 import { getProjectRoot } from "../util"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
+import ora from "ora" // 控制台交互 终端转轮
+
+const spinner = ora("Loading unicorns").start()
+
 // 状态
 let state = {
   restarting: false,
+  // 这里重启标记 不能在 restart之后标记，事件循环机制不能及时更新，要在forked on message 之后标记为false。
 }
 let forked
 let hasWathched // 是否已经开启 监听
-let restartCount = 0
+
 export const startWatch = () => {
   let root = getProjectRoot()
   let serverConfig = getProjectConfig()
@@ -36,19 +41,15 @@ export const startWatch = () => {
     ignoreInitial: true, // 初始加载文件算一次变化，这个必须关掉。不管就是多少文件就有多少变化
   })
   watcher.on("all", (event, fileName) => {
-    console.log(event, fileName, state.restarting, restartCount)
     if (state.restarting) return true
     state.restarting = true
     restart().then(() => {
-      restartCount += 1
-      state.restarting = false
-      console.log(`变化的文件：${relative(controllerDir, fileName)}`)
+      console.log(`事件：${event}, 文件：${relative(controllerDir, fileName)}`)
     })
   })
 }
 
 export const close = async () => {
-  console.log("关闭server，kill 进程")
   if (forked?.kill) {
     forked.kill()
   }
@@ -65,14 +66,16 @@ export const start = async () => {
     },
   })
   forked.on("message", (msg) => {
-    console.log("messsgae from child", msg)
+    if (msg.type == "started") {
+      state.restarting = false
+      console.log("重启成功")
+    }
   })
   if (!hasWathched) {
     startWatch()
   }
 }
 export const restart = async () => {
-  console.log("文件变化重新加载")
   await close()
   await start()
 }

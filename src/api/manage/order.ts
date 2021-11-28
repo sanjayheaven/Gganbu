@@ -25,7 +25,7 @@ export const getInfoWithController = withController(
 )
 export const getInfo = async () => {
   return {
-    data: "getIn11111",
+    data: "getIn1",
     msg: "test1223",
   }
 }
