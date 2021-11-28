@@ -21,11 +21,7 @@ export default function model() {
       }
     },
     async configureServer(server) {
-      // controller 文件变化,vite机制，可以刷新重启，但是还需要同时更新后端的路由，比如函数路由新增或者修改
-      // jiti 默认缓存。需要设置不缓存
-      // 每次修改文件，需要重启。所以要判断是不是重启，缓存文件是不是 一直是最新的。有 t参数的是最新的 但是不是当前修改导致的。
       await start()
-      console.log("app,启动，看看需要几次")
       server.middlewares.use(async (req, res, next) => {
         // 自定义请求处理...
         next()

@@ -9,20 +9,17 @@ import {
   listFiles,
   convertFileToRoute,
   importFile,
-  getProjectRoot,
   isFn,
   proxyController,
 } from "./util"
 import { join, resolve } from "upath"
-import { getProjectConfig } from "./config"
+import { getProjectConfig, getResolvedControllerDir } from "./config"
 import { Route, Controller } from "./types/model"
 import { getGlobalMiddlewares, withController } from "./middleware"
 
 export const getControllers = (): Controller[] => {
-  const projectRoot = getProjectRoot()
-  const { controllerDirname } = getProjectConfig()
-  let controllerPath = resolve(projectRoot, controllerDirname)
-  let files = listFiles(controllerPath)
+  let resolvedControllerDir = getResolvedControllerDir()
+  let files = listFiles(resolvedControllerDir)
   files = files.filter((i) => i.filePath.indexOf("configuration") == -1)
   return files.map((file) => {
     return { ...file, exports: importFile(file.filePath) }
@@ -95,9 +92,7 @@ export const AppStart = async () => {
 
   // 启动
   if (!server) {
-    server = App.listen(7006, () =>
-      console.log(`项目启动, 端口：${7006}, 环境：${process.env.NODE_ENV}`)
-    )
+    server = App.listen(7006, () => {})
   }
 
   // pm2 平滑更新
@@ -108,21 +103,3 @@ export const AppStart = async () => {
     })
   })
 }
-export const AppRestart = async () => {
-  await server.close(async () => {
-    console.log("server，成功关闭")
-    server = null
-    await AppStart()
-  })
-}
-
-export const AppClose = async () => {
-  if (server) {
-    await server.close(() => {
-      server = null
-    })
-  }
-}
-// app 启动
-// 加载中间件
-//

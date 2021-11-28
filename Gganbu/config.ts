@@ -6,14 +6,14 @@ import { existFile, getProjectRoot, importFileDefault } from "./util"
  * 默认配置
  */
 const defaultConfig: ProjectConfig = {
-  controllerDirname: "./src/controller", // 后端的controller地址
+  controllerDir: "./src/controller", // 后端的controller地址
   routerPrefix: "/api",
 }
 /**
  * 找到 整个 gganbu.config.js/ts 文件
  */
-export const getProjectConfig = (cwd?: string): ProjectConfig => {
-  const root = getProjectRoot(cwd)
+export const getProjectConfig = (): ProjectConfig => {
+  const root = getProjectRoot()
   let configJs = resolve(root, "gganbu.config.js")
   let configTs = resolve(root, "gganbu.config.ts")
   let configFilePath =
@@ -27,9 +27,9 @@ export const getProjectConfig = (cwd?: string): ProjectConfig => {
  */
 export const getServerConfig = (): ServerConfig => {
   const root = getProjectRoot()
-  let controllerDirname = "./src/api"
-  let configJs = resolve(root, controllerDirname, "configuration.js")
-  let configTs = resolve(root, controllerDirname, "configuration.ts")
+  let controllerDir = "./src/api"
+  let configJs = resolve(root, controllerDir, "configuration.js")
+  let configTs = resolve(root, controllerDir, "configuration.ts")
   let configFilePath =
     (existFile(configJs) && configJs) || (existFile(configTs) && configTs) || ""
   if (!configFilePath) return {}
@@ -37,7 +37,32 @@ export const getServerConfig = (): ServerConfig => {
 }
 
 /**
- * 自定义配置
+ * 根据项目配置，获取controllerDir
+ */
+export const getControllerDir = () => {
+  let projectConfig = getProjectConfig()
+  return projectConfig.controllerDir
+}
+
+/**
+ * 根据项目配置，resolve root，controllerDir
+ */
+export const getResolvedControllerDir = () => {
+  let root = getProjectRoot()
+  let { controllerDir } = getProjectConfig()
+  return resolve(root, controllerDir)
+}
+
+/**
+ * 根据项目配置，resolve root，controllerDir
+ */
+export const getResolvedSrcDir = () => {
+  let root = getProjectRoot()
+  return resolve(root, "./src")
+}
+
+/**
+ * 自定义项目配置
  */
 export const defineConfig = (config: ProjectConfig) => {
   return config

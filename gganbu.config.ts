@@ -1,5 +1,5 @@
 import { defineConfig } from "./Gganbu/config"
 export default defineConfig({
-  controllerDirname: "./src/api",
+  controllerDir: "./src/api",
   routerPrefix: "/api/",
 })

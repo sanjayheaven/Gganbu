@@ -1,9 +1,9 @@
-import path, { extname, resolve, join, toUnix } from "upath"
+import path, { extname } from "upath"
 import fs, { existsSync } from "fs"
 import pluralize from "pluralize"
 import { sync } from "pkg-dir"
 import createJITI from "jiti"
-import { getProjectConfig } from "./config"
+import { getResolvedControllerDir } from "./config"
 import { ControllerAction } from "./types/model"
 const jiti = createJITI(process.cwd(), { cache: false })
 
@@ -19,11 +19,8 @@ export const isTsOrJsFile = (file) => {
 export const isApiFile = (file) => {
   // 判断是不是属于 controller下的js文件
   // 存在这种情况 D:/Github/Gganbu/src/api/manage/order.ts?t=1637686059242
-
-  let root = getProjectRoot()
-  let { controllerDirname } = getProjectConfig()
-  let fullControllerDirname = resolve(root, controllerDirname)
-  if (file.indexOf(fullControllerDirname) == -1) return false
+  let resolvedControllerDir = getResolvedControllerDir()
+  if (file.indexOf(resolvedControllerDir) == -1) return false
   if (!isTsOrJsFile(file)) return false
   return true
 }
@@ -53,10 +50,8 @@ export const listFiles = (currentDirPath) => {
  * ---->  manage/orders
  */
 export const convertFileToRoute = (file) => {
-  const root = getProjectRoot()
-  const { controllerDirname } = getProjectConfig()
-  let fullControllerDirname = resolve(root, controllerDirname)
-  let splitArr = file.split(fullControllerDirname)
+  let resolvedControllerDir = getResolvedControllerDir()
+  let splitArr = file.split(resolvedControllerDir)
   let fileSplit = splitArr[1].split("/")
   let lastItem = fileSplit[fileSplit.length - 1]
   if (isTsOrJsFile(file)) {
