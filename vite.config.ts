@@ -4,7 +4,6 @@ import model from "./Gganbu/vite-plugin-model"
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(), model()],
-  logLevel: "silent",
   resolve: {
     alias: [
       { find: "@", replacement: require("path").resolve(__dirname, "src") },
