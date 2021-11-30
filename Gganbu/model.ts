@@ -15,7 +15,8 @@ import {
 import { join, resolve } from "upath"
 import { getProjectConfig, getResolvedControllerDir } from "./config"
 import { Route, Controller } from "./types/model"
-import { getGlobalMiddlewares, withController } from "./middleware"
+import { getGlobalMiddlewares, wrapController } from "./middleware"
+import { als, useContext } from "./hook"
 
 export const getControllers = (): Controller[] => {
   let resolvedControllerDir = getResolvedControllerDir()
@@ -31,17 +32,31 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
     let { fileName, filePath, exports } = controller
     let { middlewares = [] } = exports["config"] || {}
     Object.keys(exports).forEach((i) => !isFn(exports[i]) && delete exports[i])
-    let routes = Object.keys(exports).map((key) => {
-      return {
-        path: "/" + key,
-        method: (key.startsWith("get") && "GET") || "POST",
+    let routes = Object.keys(exports)
+      .filter((key) => key != "default")
+      .map((key) => {
+        return {
+          path: "/" + key,
+          method: (key.startsWith("get") && "GET") || "POST",
+          fileMiddlewares: middlewares, // 文件的配置路由信息
+          fileName: fileName,
+          actionName: key,
+          controllerPath: filePath,
+          controllerAction: exports[key],
+        }
+      })
+    /**针对 默认路由看看 必须排在最后一位 */
+    if (exports["default"]) {
+      routes.push({
+        path: "/",
+        method: "POST",
         fileMiddlewares: middlewares, // 文件的配置路由信息
         fileName: fileName,
-        actionName: key,
+        actionName: "default",
         controllerPath: filePath,
-        controllerAction: exports[key],
-      }
-    })
+        controllerAction: exports["default"],
+      })
+    }
     return [...acc, ...routes]
   }, [])
 }
@@ -52,7 +67,7 @@ const getRouters = (routes: Route[]) => {
     let { controllerPath, controllerAction, fileMiddlewares } = route
     let name = convertFileToRoute(controllerPath)
     let router = new KoaRouter({ prefix: join(routerPrefix, name) })
-    let wrappedAction = withController({ middlewares: [] }, controllerAction)
+    let wrappedAction = wrapController({}, controllerAction)
     let routeMiddlewares = wrappedAction.routeMiddlewares || []
     let proxy = proxyController(wrappedAction)
     if (route.method == "GET") {
@@ -76,14 +91,14 @@ export const App = new Koa()
 let server
 export const AppStart = async () => {
   const routers = createRouter()
-  // App.use(async (ctx, next) => {
-  //   await als.run({ ctx: ctx }, async () => {
-  //     let res = useContext()
-  //     console.log(res && res.url, "在这之前的")
-  //     await next()
-  //     console.log(res && res.url, "返回的值得")
-  //   })
-  // })
+  App.use(async (ctx, next) => {
+    await als.run({ ctx: ctx }, async () => {
+      let res = useContext()
+      console.log(res && res.url, "在这之前的")
+      await next()
+      console.log(res && res.url, "返回的值得")
+    })
+  })
 
   // 加载全局中间件
   let middlewares = getGlobalMiddlewares()

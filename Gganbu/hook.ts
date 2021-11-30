@@ -8,6 +8,6 @@ export const useContext = () => {
   console.log(store, 1234442222, "hook")
   return (als.getStore() || {})["ctx"]
 }
-// export const useConfig = () => {
-//   return als.getStore()["config"]
-// }
+export const useConfig = () => {
+  return als.getStore()["config"]
+}
