@@ -9,24 +9,26 @@ import { convertFileToRoute } from "./util"
  * @param client 请求库
  * @returns
  */
-const createApi = (exports, route, client = "'~/Gganbu/request'") => {
+const createApi = (exports, route, requetPath = "'~/Gganbu/request'") => {
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
       let url = join(route, name)
-      let method = (name.startsWith("get") && "get") || "post"
+      let method = (name.startsWith("get") && "GET") || "POST"
+      // data,params 是一个{args: args} 在 后端解析
       return `
           export async function ${name} (...args){
             return request({
               url:"${url}",
               method: "${method}",
-              data:{args}
+              data:${(method == "POST" && "{args}") || "{}"},
+              params:${(method == "GET" && "{args}") || "{}"}
             })
           }`
     })
     .join("\n")
   return `
-        import {request}  from ${client}
+        import {request}  from ${requetPath}
         ${fns}
       `
 }

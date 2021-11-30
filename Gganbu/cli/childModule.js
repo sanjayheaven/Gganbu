@@ -5,7 +5,7 @@
  */
 
 /**
- * 子进程 是启动serverde
+ * 子进程 启动server
  */
 const createJiti = require("jiti")
 let jiti = createJiti(process.cwd(), { cache: false })
