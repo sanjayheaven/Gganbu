@@ -12,11 +12,11 @@ import {
   isFn,
   proxyController,
 } from "./util"
-import { join, resolve } from "upath"
+import { join } from "upath"
 import { getProjectConfig, getResolvedControllerDir } from "./config"
 import { Route, Controller } from "./types/model"
 import { getGlobalMiddlewares, wrapController } from "./middleware"
-import { als, useContext } from "./hook"
+import { als } from "./hook"
 
 export const getControllers = (): Controller[] => {
   let resolvedControllerDir = getResolvedControllerDir()
@@ -93,10 +93,7 @@ export const AppStart = async () => {
   const routers = createRouter()
   App.use(async (ctx, next) => {
     await als.run({ ctx: ctx }, async () => {
-      let res = useContext()
-      console.log(res && res.url, "在这之前的")
       await next()
-      console.log(res && res.url, "返回的值得")
     })
   })
 

@@ -24,12 +24,12 @@ export const getInfowrapController = wrapController(
   }
 )
 
-export const getInfo = async (...args) => {
+export const getInfo = async (data, data1?: any) => {
   let ctx = useContext()
   console.log(ctx.url, 101010)
-  console.log(args, 22221)
+  console.log(data, 22221)
   return {
-    data: args,
+    data: data,
     msg: "test1223",
   }
 }

@@ -18,11 +18,15 @@ const createApi = (exports, route, requetPath = "'~/Gganbu/request'") => {
       // data,params 是一个{args: args} 在 后端解析
       return `
           export async function ${name} (...args){
+            let firstArg = args && args[0] || {}
+            if(Object.prototype.toString.call(firstArg) !== '[object Object]'){
+              firstArg = {}
+            }
             return request({
               url:"${url}",
               method: "${method}",
               data:${(method == "POST" && "{args}") || "{}"},
-              params:${(method == "GET" && "{args}") || "{}"}
+              params:${(method == "GET" && "{...firstArg}") || "{}"}
             })
           }`
     })

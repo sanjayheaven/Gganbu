@@ -1,5 +1,3 @@
-import middleware from "@/middleware"
-import KoaCompose from "koa-compose"
 import { getServerConfig } from "./config"
 import { ControllerAction } from "./types/model"
 /**

@@ -5,9 +5,10 @@ import { getInfo, createOrder } from "../api/manage/order"
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 onMounted(async () => {
   try {
-    let res = await getInfo("你好啊getInfo", "hellogetInfo")
-    let res1 = await createOrder("创建订单1")
-    console.log(res, res1, 111)
+    let res = await getInfo({ orders: 1, products: 1 }, { hello: "world" })
+    let res1 = await getInfo("orders")
+    let res2 = await createOrder("创建订单1")
+    console.log(res, res1, res2, 111)
   } catch (err) {
     console.log(err)
   }

@@ -74,7 +74,7 @@ export const proxyController = (
       res = await actionFn(...args)
     } else if (ctx.method == "GET") {
       let query = ctx.request.query || {}
-      res = await actionFn(...(query["args[]"] || []))
+      res = await actionFn(query)
     }
     ctx["body"] = res
   }
