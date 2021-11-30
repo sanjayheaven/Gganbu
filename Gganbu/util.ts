@@ -9,16 +9,16 @@ const jiti = createJITI(process.cwd(), { cache: false })
 
 export const isFn = (item) => {
   return typeof item === "function"
-  // let value = Object.prototype.toString.call(item)
-  // return ["[object Function]", "[object AsyncFunction]"].includes(value)
 }
 export const isTsOrJsFile = (file) => {
   return [".ts", ".js"].includes(extname(file))
 }
 
+/**
+ * 判断是不是属于 controller下的js文件
+ * 存在这种情况 D:/Github/Gganbu/src/api/manage/order.ts?t=1637686059242
+ */
 export const isApiFile = (file) => {
-  // 判断是不是属于 controller下的js文件
-  // 存在这种情况 D:/Github/Gganbu/src/api/manage/order.ts?t=1637686059242
   let resolvedControllerDir = getResolvedControllerDir()
   if (file.indexOf(resolvedControllerDir) == -1) return false
   if (!isTsOrJsFile(file)) return false
@@ -28,7 +28,6 @@ export const isApiFile = (file) => {
 /**
  * 列出某个目录下的文件，返回格式
  * {filePath,fileName}
- *
  */
 export const listFiles = (currentDirPath) => {
   return fs.readdirSync(currentDirPath).reduce((acc, file) => {
@@ -69,7 +68,14 @@ export const proxyController = (
   actionFn: ControllerAction
 ): ControllerAction => {
   return async function (ctx) {
-    let res = await actionFn()
+    let res = {}
+    if (ctx.method == "POST") {
+      let { args = [] } = ctx.request.body
+      res = await actionFn(...args)
+    } else if (ctx.method == "GET") {
+      let query = ctx.request.query || {}
+      res = await actionFn(...(query["args[]"] || []))
+    }
     ctx["body"] = res
   }
 }

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
-import { getInfo } from "../api/manage/order"
+import { getInfo, createOrder } from "../api/manage/order"
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 onMounted(async () => {
   try {
-    let res = await getInfo()
-    console.log(JSON.stringify(res), 111)
+    let res = await getInfo("你好啊getInfo", "hellogetInfo")
+    let res1 = await createOrder("创建订单1")
+    console.log(res, res1, 111)
   } catch (err) {
     console.log(err)
   }

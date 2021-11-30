@@ -2,13 +2,12 @@ import middleware from "@/middleware"
 import KoaCompose from "koa-compose"
 import { getServerConfig } from "./config"
 import { ControllerAction } from "./types/model"
-import { isFn, proxyController } from "./util"
 /**
  * 路由中间件 routeMiddlewares
  * 给接口增加 属性 routeMiddlewares
  */
 
-export const withController = (config, controllerAction: ControllerAction) => {
+export const wrapController = (config, controllerAction: ControllerAction) => {
   let { middlewares = [] } = config
   controllerAction.routeMiddlewares = [
     ...middlewares,

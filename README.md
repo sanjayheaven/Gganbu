@@ -66,11 +66,11 @@ export const config = {
 
 ### 路由中间件
 
-单个路由级别的中间件，采用 **withController** 来加载中间件
+单个路由级别的中间件，采用 **wrapController** 来加载中间件
 第一个参数是 中间件 配置，第二个参数是要执行的 Controller Action。
 
 ```js
-export const getInfo = withController({ middlewares: [] }, () => {})
+export const getInfo = wrapController({ middlewares: [] }, () => {})
 ```
 
 ## 打包

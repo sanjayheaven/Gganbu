@@ -6,7 +6,7 @@ import { existFile, getProjectRoot, importFileDefault } from "./util"
  * 默认配置
  */
 const defaultConfig: ProjectConfig = {
-  controllerDir: "./src/controller", // 后端的controller地址
+  controllerDir: "./src/controllers", // 后端的controller地址
   routerPrefix: "/api",
 }
 /**
