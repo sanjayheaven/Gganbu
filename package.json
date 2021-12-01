@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "gganbu",
   "version": "1.0.0",
   "description": "- Api 请求以页面为单位\r - 根据 Model Schema 自动生成 DB Services 的基础操作",
   "main": "index.js",
@@ -21,37 +21,20 @@
   },
   "homepage": "https://github.com/sanjayheaven/server#readme",
   "dependencies": {
-    "@vitejs/plugin-vue": "^1.9.4",
-    "@vue/compiler-sfc": "^3.2.21",
     "axios": "^0.24.0",
-    "chalk": "^4.1.0",
+    "chalk": "^5.0.0",
     "chokidar": "^3.5.2",
-    "create-require": "^1.1.1",
     "es-module-lexer": "^0.9.3",
     "jiti": "^1.10.1",
-    "koa": "^2.13.4",
-    "koa-bodyparser": "^4.3.0",
     "koa-compose": "^4.1.0",
     "koa-router": "^10.1.1",
-    "koa2-cors": "^2.0.6",
     "light-spinner": "^1.0.4",
-    "mongoose": "^5.12.4",
-    "nodemon": "^2.0.14",
-    "ora": "^6.0.1",
     "pkg-dir": "^5.0.0",
     "pluralize": "^8.0.0",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.4.4",
     "upath": "^2.0.1",
-    "vite": "^2.6.14",
-    "vite-plugin-require": "0.0.5",
-    "vue": "^3.2.15"
+    "vite": "^2.6.14"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/node": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
     "@types/pluralize": "0.0.29"
   }
 }
