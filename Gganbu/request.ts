@@ -17,11 +17,12 @@ axios.interceptors.response.use(
 )
 
 export const request = async (config) => {
-  let response = await axios({
-    baseURL: "http://127.0.0.1:7006/api",
-    timeout: 10000,
+  let { port, baseURL, routerPrefix } = config || {}
+  let res = await axios({
+    baseURL: baseURL || `http://127.0.0.1:${port}/api`,
+    timeout: 30000,
     // headers: { "Content-Type": "application/json" },
     ...config,
   })
-  return response.data
+  return res
 }

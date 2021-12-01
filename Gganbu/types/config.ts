@@ -10,12 +10,7 @@ export interface ProjectConfig {
  * server 的配置
  */
 export interface ServerConfig {
-  middlewares?: any[]
-}
-
-/**
- * server 的配置
- */
-export interface ServerConfig {
-  middlewares?: any[]
+  middlewares?: any[] // 全局中间件
+  port?: number // server 启动端口
+  routerPrefix?: string // 全局的路由前缀
 }

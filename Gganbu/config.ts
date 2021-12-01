@@ -3,10 +3,19 @@ import { ProjectConfig, ServerConfig } from "./types/config"
 import { existFile, getProjectRoot, importFileDefault } from "./util"
 
 /**
- * 默认配置
+ * 默认项目配置
  */
-const defaultConfig: ProjectConfig = {
+const defaultProjectConfig: ProjectConfig = {
   controllerDir: "./src/controllers", // 后端的controller地址
+  routerPrefix: "/api",
+}
+
+/**
+ * 默认服务端配置
+ */
+const defaultServerConfig: ServerConfig = {
+  middlewares: [],
+  port: 9527,
   routerPrefix: "/api",
 }
 /**
@@ -18,7 +27,7 @@ export const getProjectConfig = (): ProjectConfig => {
   let configTs = resolve(root, "gganbu.config.ts")
   let configFilePath =
     (existFile(configJs) && configJs) || (existFile(configTs) && configTs) || ""
-  if (!configFilePath) return defaultConfig
+  if (!configFilePath) return defaultProjectConfig
   return importFileDefault(configFilePath)
 }
 
@@ -32,7 +41,7 @@ export const getServerConfig = (): ServerConfig => {
   let configTs = resolve(root, controllerDir, "configuration.ts")
   let configFilePath =
     (existFile(configJs) && configJs) || (existFile(configTs) && configTs) || ""
-  if (!configFilePath) return {}
+  if (!configFilePath) return defaultServerConfig
   return importFileDefault(configFilePath)
 }
 
