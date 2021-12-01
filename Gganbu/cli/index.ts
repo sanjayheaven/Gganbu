@@ -1,6 +1,6 @@
 import * as chokidar from "chokidar"
 import { join, relative, resolve } from "upath"
-import { getProjectConfig, getResolvedControllerDir, getResolvedSrcDir } from "../config"
+import { getResolvedSrcDir } from "../config"
 import { getProjectRoot } from "../util"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"

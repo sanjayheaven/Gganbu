@@ -1,15 +1,14 @@
 import { init, parse } from "es-module-lexer"
 import { join } from "upath"
+import { getServerConfig } from "./config"
 import { convertFileToRoute } from "./util"
 
 /**
- *
- * @param exports controller文件导出的所有actions
- * @param route 文件相对于 controller目录的 的路径 即路由前缀
- * @param client 请求库
- * @returns
+ * 创建 api 虚拟文档
  */
 const createApi = (exports, route, requetPath = "'~/Gganbu/request'") => {
+  let { port } = getServerConfig()
+  console.log(port, "看看什么端口从设置")
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
@@ -26,7 +25,8 @@ const createApi = (exports, route, requetPath = "'~/Gganbu/request'") => {
               url:"${url}",
               method: "${method}",
               data:${(method == "POST" && "{args}") || "{}"},
-              params:${(method == "GET" && "{...firstArg}") || "{}"}
+              params:${(method == "GET" && "{...firstArg}") || "{}"},
+              port:${port}
             })
           }`
     })

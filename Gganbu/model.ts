@@ -13,7 +13,11 @@ import {
   proxyController,
 } from "./util"
 import { join } from "upath"
-import { getProjectConfig, getResolvedControllerDir } from "./config"
+import {
+  getProjectConfig,
+  getResolvedControllerDir,
+  getServerConfig,
+} from "./config"
 import { Route, Controller } from "./types/model"
 import { getGlobalMiddlewares, wrapController } from "./middleware"
 import { als } from "./hook"
@@ -90,6 +94,7 @@ export const createRouter = () => {
 export const App = new Koa()
 let server
 export const AppStart = async () => {
+  let { port } = getServerConfig()
   const routers = createRouter()
   App.use(async (ctx, next) => {
     await als.run({ ctx: ctx }, async () => {
@@ -104,7 +109,7 @@ export const AppStart = async () => {
 
   // 启动
   if (!server) {
-    server = App.listen(7006, () => {})
+    server = App.listen(port, () => {})
   }
 
   // pm2 平滑更新
