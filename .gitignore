@@ -23,6 +23,3 @@ pnpm-debug.log*
 *.sw?
 .VSCodeCounter/*
 
-
-/routes
-/demo

@@ -1,14 +1,10 @@
 {
   "name": "gganbu",
-  "version": "1.0.0",
-  "description": "- Api 请求以页面为单位\r - 根据 Model Schema 自动生成 DB Services 的基础操作",
-  "main": "index.js",
+  "version": "1.1.3",
+  "description": "Gganbu 一体化 Web 开发框架",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite",
-    "build": "vite build",
-    "build:client": "vite build",
-    "serve": "vite preview"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -22,10 +18,10 @@
   "homepage": "https://github.com/sanjayheaven/server#readme",
   "dependencies": {
     "axios": "^0.24.0",
-    "chalk": "^5.0.0",
     "chokidar": "^3.5.2",
     "es-module-lexer": "^0.9.3",
     "jiti": "^1.10.1",
+    "koa": "^2.13.4",
     "koa-compose": "^4.1.0",
     "koa-router": "^10.1.1",
     "light-spinner": "^1.0.4",
@@ -35,6 +31,8 @@
     "vite": "^2.6.14"
   },
   "devDependencies": {
-    "@types/pluralize": "0.0.29"
+    "@types/node": "^16.11.11",
+    "@types/pluralize": "0.0.29",
+    "chalk": "^4.1.0"
   }
 }
