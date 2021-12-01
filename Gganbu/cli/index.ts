@@ -22,7 +22,7 @@ let forked
 export const startWatch = () => {
   let resolvedSrcDir = getResolvedSrcDir()
   const watchAllowExts = [].concat(".ts")
-  
+
   const watcher = chokidar.watch(resolvedSrcDir, {
     ignored: (path, fsStats) => {
       if (path.includes("node_modules")) {
@@ -86,6 +86,4 @@ export const start = async () => {
 export const restart = async () => {
   await close()
   await start()
-
-  // return new Promise(() => {})
 }

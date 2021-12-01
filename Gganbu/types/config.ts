@@ -4,6 +4,9 @@
 export interface ProjectConfig {
   controllerDir?: string
   routerPrefix?: string
+  build?: {
+    outDir?: string
+  }
 }
 
 /**

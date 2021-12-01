@@ -33,4 +33,5 @@ async function errorHandling(ctx, next) {
   }
 }
 
-export default [logger, errorHandling, bodyParser(), cors()]
+// export default [logger, errorHandling, bodyParser(), cors()]
+export default [bodyParser(), cors()]

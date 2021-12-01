@@ -6,11 +6,10 @@ import { ControllerAction } from "./types/model"
  */
 
 export const wrapController = (config, controllerAction: ControllerAction) => {
-  let { middlewares = [] } = config
-  controllerAction.routeMiddlewares = [
-    ...middlewares,
-    ...(controllerAction.routeMiddlewares || []),
-  ]
+  controllerAction.config = {
+    ...(controllerAction.config || {}),
+    ...config,
+  }
   return controllerAction
 }
 

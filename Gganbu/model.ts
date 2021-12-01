@@ -42,7 +42,7 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
         return {
           path: "/" + key,
           method: (key.startsWith("get") && "GET") || "POST",
-          fileMiddlewares: middlewares, // 文件的配置路由信息
+          middlewares, // 文件的配置路由信息
           fileName: fileName,
           actionName: key,
           controllerPath: filePath,
@@ -54,7 +54,7 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
       routes.push({
         path: "/",
         method: "POST",
-        fileMiddlewares: middlewares, // 文件的配置路由信息
+        middlewares, // 文件的配置路由信息
         fileName: fileName,
         actionName: "default",
         controllerPath: filePath,
@@ -68,11 +68,16 @@ export const getRoutes = (controllers: Controller[]): Route[] => {
 const getRouters = (routes: Route[]) => {
   let { routerPrefix } = getProjectConfig()
   return routes.reduce((acc, route: Route) => {
-    let { controllerPath, controllerAction, fileMiddlewares } = route
+    let {
+      controllerPath,
+      controllerAction,
+      middlewares: fileMiddlewares,
+    } = route
     let name = convertFileToRoute(controllerPath)
     let router = new KoaRouter({ prefix: join(routerPrefix, name) })
     let wrappedAction = wrapController({}, controllerAction)
-    let routeMiddlewares = wrappedAction.routeMiddlewares || []
+
+    let { middlewares: routeMiddlewares = [] } = wrappedAction.config || {}
     let proxy = proxyController(wrappedAction)
     if (route.method == "GET") {
       router.get(route.path, ...fileMiddlewares, ...routeMiddlewares, proxy)
