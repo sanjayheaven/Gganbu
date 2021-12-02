@@ -2,9 +2,10 @@
 
 <p align="center">Gganbu - 一体化 Web 开发框架 </p>
 
+**Close friends who share everything**
+
 Gganbu 是致力于提效全栈开发的 Nodejs 框架。  
-目前 Gganbu 基于 Koa 作为 Server 框架，前端部分能够与 React 和 Vue 集成。  
-当前 Git 库是 Vue3 的项目模板，核心库还未分离。
+目前 Gganbu 基于 Koa 作为 Server 框架，前端部分能够与 React 和 Vue 集成。
 
 ## 特性
 
@@ -106,4 +107,4 @@ npm run build:server
 - 现在 server 的代码 是 **热重启**，看看以后能不能做到 **热更新**
 - 如果以后 ts 出现函数的装饰器 @，而不是类方法的，可能替换掉一些 hoc 操作。
   - 关于 [为什么装饰器不能用于函数？](https://www.bookstack.cn/read/es6-3rd/spilt.3.docs-decorator.md)
-/src/api/manage/order.ts?t=1637727018245
+    /src/api/manage/order.ts?t=1637727018245

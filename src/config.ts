@@ -31,18 +31,6 @@ export const getProjectConfig = (): ProjectConfig => {
 }
 
 /**
- * 找到 controller 目录下的 configuration文件
- */
-export const getServerConfig = (): ServerConfig => {
-  let resolvedContrtollerDir = getResolvedControllerDir()
-  let jsFile = resolve(resolvedContrtollerDir, "configuration.js")
-  let tsFile = resolve(resolvedContrtollerDir, "configuration.ts")
-  let filePath = (existFile(jsFile) && jsFile) || (existFile(tsFile) && tsFile)
-  if (!filePath) return defaultServerConfig
-  return importFileDefault(filePath)
-}
-
-/**
  * 根据项目配置，获取controllerDir
  */
 export const getControllerDir = () => {
@@ -65,6 +53,26 @@ export const getResolvedControllerDir = () => {
 export const getResolvedSrcDir = () => {
   let root = getProjectRoot()
   return resolve(root, "./src")
+}
+
+/**
+ * 找到 controller 目录下的 configuration文件
+ */
+export const getServerConfigPre = (): ServerConfig => {
+  let resolvedContrtollerDir = getResolvedControllerDir()
+  let jsFile = resolve(resolvedContrtollerDir, "configuration.js")
+  let tsFile = resolve(resolvedContrtollerDir, "configuration.ts")
+  let filePath = (existFile(jsFile) && jsFile) || (existFile(tsFile) && tsFile)
+  if (!filePath) return defaultServerConfig
+  return importFileDefault(filePath)
+}
+export const wrappedServerConfig = {
+  getConfig: (): ServerConfig => {
+    return getServerConfigPre()
+  },
+}
+export const getServerConfig = () => {
+  return wrappedServerConfig.getConfig()
 }
 
 /**
