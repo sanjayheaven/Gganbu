@@ -17,8 +17,8 @@ export default function () {
         next()
       })
     },
-    config: () => {
-      return { logLevel: "silent" }
-    },
+    // config: () => {
+    //   return { logLevel: "silent" }
+    // },
   }
 }

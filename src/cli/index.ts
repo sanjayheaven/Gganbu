@@ -1,6 +1,10 @@
 import * as chokidar from "chokidar"
 import { join, relative, resolve } from "upath"
-import { getResolvedSrcDir, wrappedServerConfig } from "../config"
+import {
+  getResolvedSrcDir,
+  getServerConfigPre,
+  wrappedServerConfig,
+} from "../config"
 import { getProjectRoot } from "../util"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
@@ -55,27 +59,29 @@ export const startWatch = () => {
 export const close = async () => {
   Spinner.stop()
   if (forked?.kill) {
-    forked.kill()
+    await forked.kill()
   }
   forked = null
+  state.hasStarted = false
 }
 
 export const start = async () => {
-  let { port: checkedPort } = getServerConfig()
-  // if (!state.hasStarted) {
-  //   console.log("第一次启动 需要检测端口")
-  //   // 第一次启动 需要检测端口
-  //   let serverConfig = getServerConfig()
-  //   let { port } = serverConfig
-  //   checkedPort = await checkPort(port)
-  //   console.log(checkedPort, "检测通过的端口")
-  //   // 重写 getServerConfig
-  //   wrappedServerConfig.getConfig = (): ServerConfig => {
-  //     return { ...serverConfig, port: checkedPort }
-  //   }
-  //   // return restart()
-  //   console.log(wrappedServerConfig, "2272", 91919)
-  // }
+  let serverConfig = getServerConfigPre()
+  let { port } = serverConfig
+  let checkedPort
+  if (!state.hasStarted) {
+    // 第一次启动 需要检测端口
+    checkedPort = await checkPort(port)
+    if (checkedPort != port) {
+      console.log(
+        `[ Gganbu ] Server Port ${port} is in use. Now using port ${checkedPort}`
+      )
+    }
+    // 重写 getServerConfig
+    wrappedServerConfig.getConfig = (): ServerConfig => {
+      return { ...serverConfig, port: checkedPort }
+    }
+  }
   if (!state.hasWatched) {
     startWatch()
   }
@@ -89,7 +95,7 @@ export const start = async () => {
     })
     forked.on("message", (msg: ProcessMessage) => {
       if (msg.type == "started") {
-        state.hasStarted = true // 启动过一次 第一次
+        state.hasStarted = true
         Spinner.stop()
         state.restarting = false
       }
@@ -101,6 +107,14 @@ export const start = async () => {
 export const restart = async () => {
   await close()
   await start()
+}
 
-  // return new Promise(() => {})
+export const run = async () => {
+  process.on("exit", () => close())
+  // process.on("SIGINT", () => close())
+  if (state.hasStarted) {
+    console.log("server 已启动")
+    return
+  }
+  return start()
 }
