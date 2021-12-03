@@ -3,7 +3,7 @@
 <p align="center">Gganbu - 一体化 Web 开发框架 </p>
 
 <div align="center">
-[![npm](https://img.shields.io/npm/v/gganbu)](https://www.npmjs.com/package/gganbu)
+[![npm](https://img.shields.io/npm/v/simple-js-export)](https://www.npmjs.com/package/simple-js-export)
 </div>
 
 Gganbu 是 致力于提效全栈开发的 Nodejs 框架。  
@@ -77,7 +77,7 @@ export const getInfo = async () => {}
 getInfo.config = { middlewares: [logger] }
 ```
 
-## 打包
+## 📦 打包
 
 ### 前端打包
 
