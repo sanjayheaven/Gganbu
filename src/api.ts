@@ -8,7 +8,6 @@ import { convertFileToRoute } from "./util"
  */
 const createApi = (exports, route, requestPath = "'gganbu/request'") => {
   let { port } = getServerConfig()
-  console.log(port, "看看什么端口从设置")
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
