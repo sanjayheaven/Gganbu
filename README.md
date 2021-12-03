@@ -3,7 +3,9 @@
 <p align="center">Gganbu - 一体化 Web 开发框架 </p>
 
 <div align="center">
-[![npm](https://img.shields.io/npm/v/simple-js-export)](https://www.npmjs.com/package/simple-js-export)
+
+![npm](https://img.shields.io/npm/v/gganbu)
+
 </div>
 
 Gganbu 是 致力于提效全栈开发的 Nodejs 框架。  
@@ -34,7 +36,7 @@ let data = await getInfo()
 console.log(data) // 这是 getInfo 函数的返回结果
 ```
 
-## 中间件
+## 🌈 中间件
 
 在编写 server 部分代码的时候，我们需要全局中间件，需要单个路由的中间件。
 
