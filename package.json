@@ -20,6 +20,9 @@
     "package.json",
     "README.md"
   ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "homepage": "https://github.com/sanjayheaven/server#readme",
   "dependencies": {
     "axios": "^0.24.0",
