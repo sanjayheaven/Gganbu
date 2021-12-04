@@ -14,7 +14,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "types": ["Node"],
-    "outDir": "./dist"
+    "outDir": "dist",
+    "declaration": true
   },
   "exclude": ["dist", "node_modules", "test"]
 }
