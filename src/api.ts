@@ -6,7 +6,7 @@ import { convertFileToRoute } from "./util"
 /**
  * 创建 api 虚拟文档
  */
-const createApi = (exports, route, requestPath = "'gganbu/request'") => {
+const createApi = (exports, route, requestPath = "'gganbu'") => {
   let { port } = getServerConfig()
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default
