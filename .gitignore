@@ -23,3 +23,6 @@ pnpm-debug.log*
 *.sw?
 .VSCodeCounter/*
 
+# vuepress
+.temp/
+docs/.vuepress/dist

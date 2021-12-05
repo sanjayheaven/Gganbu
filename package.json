@@ -4,7 +4,9 @@
   "description": "Gganbu 一体化 Web 开发框架",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc:dev": "vuepress dev docs --temp .temp",
+    "doc:build": "vuepress build docs"
   },
   "repository": {
     "type": "git",
@@ -44,6 +46,7 @@
     "@types/node": "^16.11.11",
     "@types/pluralize": "0.0.29",
     "chalk": "^4.1.0",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "vuepress": "^1.8.2"
   }
 }
