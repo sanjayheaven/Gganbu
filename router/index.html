@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>路由 | Gganbu</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="Just playing around">
+    
+    <link rel="preload" href="/gganbu/assets/css/0.styles.624048e7.css" as="style"><link rel="preload" href="/gganbu/assets/js/app.c7b9a0d7.js" as="script"><link rel="preload" href="/gganbu/assets/js/2.bf1c3eac.js" as="script"><link rel="preload" href="/gganbu/assets/js/13.d3d9c1b4.js" as="script"><link rel="prefetch" href="/gganbu/assets/js/10.7f572ff8.js"><link rel="prefetch" href="/gganbu/assets/js/11.14dd6947.js"><link rel="prefetch" href="/gganbu/assets/js/12.e17e4755.js"><link rel="prefetch" href="/gganbu/assets/js/14.3612e6cb.js"><link rel="prefetch" href="/gganbu/assets/js/3.635c6cb2.js"><link rel="prefetch" href="/gganbu/assets/js/4.fbcf4621.js"><link rel="prefetch" href="/gganbu/assets/js/5.ec4b3f90.js"><link rel="prefetch" href="/gganbu/assets/js/6.27888615.js"><link rel="prefetch" href="/gganbu/assets/js/7.e23a1d77.js"><link rel="prefetch" href="/gganbu/assets/js/8.c31a62a9.js"><link rel="prefetch" href="/gganbu/assets/js/9.bbb7ac72.js">
+    <link rel="stylesheet" href="/gganbu/assets/css/0.styles.624048e7.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/gganbu/" class="home-link router-link-active"><!----> <span class="site-name">Gganbu</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/gganbu/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/gganbu/intro/" class="nav-link">
+  文档
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/gganbu/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/gganbu/intro/" class="nav-link">
+  文档
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><a href="/gganbu/intro/" class="sidebar-link">介绍</a></li><li><a href="/gganbu/usage/" class="sidebar-link">快速上手</a></li><li><a href="/gganbu/hooks/" class="sidebar-link">Hooks</a></li><li><a href="/gganbu/middleware/" class="sidebar-link">中间件</a></li><li><a href="/gganbu/router/" aria-current="page" class="active sidebar-link">路由</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/gganbu/router/#默认解析" class="sidebar-link">默认解析</a></li><li class="sidebar-sub-header"><a href="/gganbu/router/#路由设置" class="sidebar-link">路由设置</a></li></ul></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="路由"><a href="#路由" class="header-anchor">#</a> 路由</h1> <p>Gganbu 通过文件路径 + 导出方法解析出路由配置。</p> <h2 id="默认解析"><a href="#默认解析" class="header-anchor">#</a> 默认解析</h2> <p>将通过以下三个示例来说明 Gganbu 如何解析路由配置。</p> <p>文件路径 /controller/manage/order.ts</p> <ul><li><strong>getOrder</strong> ➡ <strong>GET</strong> /manage/orders/getOrder</li> <li><strong>createOrder</strong> ➡ <strong>POST</strong> /manage/orders/createOrder</li> <li><strong>default</strong> ➡ <strong>POST</strong> /manage/orders/</li></ul> <p>当 <strong>Controller Action</strong> 也就是 导出方法 以 <strong>get</strong> 开头的时候，路由方法 对应 <strong>GET</strong>。<br>
+其余则为 <strong>POST</strong> 方法，包括导出的 <strong>default</strong> 方法。<br>
+同时，值得注意的是，Gganbu 会自动将 导出方法所在文件名 解析为复数。</p> <h2 id="路由设置"><a href="#路由设置" class="header-anchor">#</a> 路由设置</h2> <p>Gganbu 同时也提供了路由设置，其中全局路由在 <strong>gganbu.config.ts</strong> 中设置。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> defineConfig <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">&quot;gganbu&quot;</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token function">defineConfig</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  routerPrefix<span class="token operator">:</span> <span class="token string">&quot;/api&quot;</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/gganbu/middleware/" class="prev">
+        中间件
+      </a></span> <!----></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/gganbu/assets/js/app.c7b9a0d7.js" defer></script><script src="/gganbu/assets/js/2.bf1c3eac.js" defer></script><script src="/gganbu/assets/js/13.d3d9c1b4.js" defer></script>
+  </body>
+</html>
