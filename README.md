@@ -11,12 +11,22 @@
 Gganbu 是 致力于提效全栈开发的 Nodejs 框架。  
 目前 Gganbu 基于 Koa 作为 Server 框架，前端部分能够与 React 和 Vue 集成。
 
+## 📚 文档
+
+- [Github Pages](https://sanjayheaven.github.io/gganbu-docs/)
+
 ## ✨ 特性
 
 - 前后端一体化开发，在 src 一个目录下开发前后端代码
 - 零 Api 调用，从 controller（可配置）目录 引入函数，调用函数自动转换为 Api 请求
 - 零 Route 配置，按照文件所在路径 自动配置 Route
 - 基于 Vite + TypeScript 开发，支持 React/Vue 等框架
+
+## 🔨 安装
+
+```shell
+npm install gganbu
+```
 
 ## 🏳‍🌈 示例
 
