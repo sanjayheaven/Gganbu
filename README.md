@@ -13,7 +13,7 @@ Gganbu 是 致力于提效全栈开发的 Nodejs 框架。
 
 ## 📚 文档
 
-- [Github Pages](https://sanjayheaven.github.io/gganbu-docs/)
+- [Github Pages](https://sanjayheaven.github.io/Gganbu/)
 
 ## ✨ 特性
 
