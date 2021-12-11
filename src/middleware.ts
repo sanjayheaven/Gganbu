@@ -1,4 +1,4 @@
-import { getServerConfig } from "./config"
+import { getProjectConfig } from "./config"
 import { ControllerAction } from "./types/model"
 /**
  * 路由中间件 routeMiddlewares
@@ -24,6 +24,6 @@ export const wrapController = (config, controllerAction: ControllerAction) => {
  * 全局中间件
  */
 export const getGlobalMiddlewares = () => {
-  let { middlewares = [] } = getServerConfig()
+  let { middlewares = [] } = getProjectConfig()
   return middlewares
 }

@@ -1,18 +1,14 @@
 import * as chokidar from "chokidar"
 import { join, relative, resolve } from "upath"
-import {
-  getResolvedSrcDir,
-  getServerConfigPre,
-  wrappedServerConfig,
-} from "../config"
+import { getResolvedSrcDir, } from "../config"
 import { getProjectRoot } from "../util"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
 import Spin from "light-spinner"
 import { ProcessMessage } from "../types/cli"
 import { checkPort } from "./util"
-import { getServerConfig } from "../config"
-import { ServerConfig } from "../types/config"
+import { ProjectConfig, } from "../types/config"
+import { getProjectConfig, wrappedProjectConfig } from ".."
 const Spinner = new Spin({ text: "Gganbu Starting" })
 
 // 状态库
@@ -66,8 +62,8 @@ export const close = async () => {
 }
 
 export const start = async () => {
-  let serverConfig = getServerConfigPre()
-  let { port } = serverConfig
+  let projectConfig = getProjectConfig()
+  let { port } = projectConfig
   let checkedPort
   if (!state.hasStarted) {
     // 第一次启动 需要检测端口
@@ -77,9 +73,9 @@ export const start = async () => {
         `[ Gganbu ] Server Port ${port} is in use. Now using port ${checkedPort}`
       )
     }
-    // 重写 getServerConfig
-    wrappedServerConfig.getConfig = (): ServerConfig => {
-      return { ...serverConfig, port: checkedPort }
+    // 重写 
+    wrappedProjectConfig.getConfig = (): ProjectConfig => {
+      return { ...projectConfig, port: checkedPort }
     }
   }
   if (!state.hasWatched) {

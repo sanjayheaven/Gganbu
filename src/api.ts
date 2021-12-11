@@ -1,13 +1,13 @@
 import { init, parse } from "es-module-lexer"
 import { join } from "upath"
-import { getServerConfig } from "./config"
+import { getProjectConfig } from "./config"
 import { convertFileToRoute } from "./util"
 
 /**
  * 创建 api 虚拟文档
  */
 const createApi = (exports, route, requestPath = "gganbu/dist/request") => {
-  let { port } = getServerConfig()
+  let { port } = getProjectConfig()
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
