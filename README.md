@@ -63,8 +63,8 @@ Gganbu 对中间件的处理 也同样分为三类：
 全局中间件 在 src/controller/configuration.ts 中配置。
 
 ```ts
-import { defineServerConfig } from "gganbu/dist/config"
-export default defineServerConfig({
+import { defineConfig } from "gganbu/dist/config"
+export default defineConfig({
   middlewares: [], // 全局中间件
   port: 9527,
 })
