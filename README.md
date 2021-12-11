@@ -5,9 +5,11 @@
 <div align="center">
 
 [![npm](https://img.shields.io/npm/v/gganbu)](https://www.npmjs.com/package/gganbu)
+![npm](https://img.shields.io/npm/dw/gganbu)
 
 </div>
 
+Gganbu, 音 **刚布**，取自于 **鱿鱼游戏**，意为 **最近的朋友，能分享一切**。  
 Gganbu 是 致力于提效全栈开发的 Nodejs 框架。  
 目前 Gganbu 基于 Koa 作为 Server 框架，前端部分能够与 React 和 Vue 集成。
 
