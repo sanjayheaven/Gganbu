@@ -5,7 +5,7 @@
 <div align="center">
 
 [![npm](https://img.shields.io/npm/v/gganbu)](https://www.npmjs.com/package/gganbu)
-![npm](https://img.shields.io/npm/dw/gganbu)
+<!-- ![npm](https://img.shields.io/npm/dw/gganbu) -->
 
 </div>
 
