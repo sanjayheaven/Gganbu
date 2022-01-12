@@ -18,11 +18,21 @@ axios.interceptors.response.use(
 
 export const request = async (config) => {
   let { port, baseURL, routerPrefix } = config || {}
+
+  // 开发环境 其他环境
+  let DevUrl = `http://127.0.0.1:${port}${routerPrefix}`
+  let OtherUrl = (baseURL && `${baseURL}${routerPrefix}`) || ""
+
+  console.log(OtherUrl, DevUrl, process.env.NODE_ENV)
+  if (["development", "dev"].includes(process.env.NODE_ENV)) {
+    OtherUrl = "" //
+  }
+
   let res = await axios({
-    baseURL: baseURL || `http://127.0.0.1:${port}/api`,
+    ...config, // 留下来
+    baseURL: OtherUrl || DevUrl,
     timeout: 30000,
     // headers: { "Content-Type": "application/json" },
-    ...config,
   })
   return res
 }

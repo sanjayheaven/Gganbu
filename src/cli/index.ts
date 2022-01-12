@@ -1,13 +1,13 @@
 import * as chokidar from "chokidar"
 import { join, relative, resolve } from "upath"
-import { getResolvedSrcDir, } from "../config"
+import { getResolvedSrcDir } from "../config"
 import { getProjectRoot } from "../util"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
 import Spin from "light-spinner"
 import { ProcessMessage } from "../types/cli"
 import { checkPort } from "./util"
-import { ProjectConfig, } from "../types/config"
+import { ProjectConfig } from "../types/config"
 import { getProjectConfig, wrappedProjectConfig } from ".."
 const Spinner = new Spin({ text: "Gganbu Starting" })
 
@@ -17,6 +17,7 @@ let state = {
   hasStarted: false, // 是否启动过 // 标价区分 第一次和重启的区别
   // 这里重启标记 不能在 restart之后标记，事件循环机制不能及时更新，要在forked on message 之后标记为false。
   hasWatched: false, // 是否开启过监听
+  initPort: 0,
 }
 
 let forked
@@ -64,16 +65,20 @@ export const close = async () => {
 export const start = async () => {
   let projectConfig = getProjectConfig()
   let { port } = projectConfig
+
+  console.log(projectConfig, 1234)
+  // 先解决，重复利用端口，不然端口一直上升，最后看下为什么不能等待关闭，一直是一个端口
+  state.initPort = (!state.initPort && port) || state.initPort
   let checkedPort
   if (!state.hasStarted) {
     // 第一次启动 需要检测端口
-    checkedPort = await checkPort(port)
+    checkedPort = await checkPort(state.initPort)
     if (checkedPort != port) {
       console.log(
         `[ Gganbu ] Server Port ${port} is in use. Now using port ${checkedPort}`
       )
     }
-    // 重写 
+    // 重写
     wrappedProjectConfig.getConfig = (): ProjectConfig => {
       return { ...projectConfig, port: checkedPort }
     }

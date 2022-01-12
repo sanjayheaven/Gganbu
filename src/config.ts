@@ -1,5 +1,5 @@
 import { join, resolve } from "upath"
-import { ProjectConfig, } from "./types/config"
+import { ProjectConfig } from "./types/config"
 import { existFile, getProjectRoot, importFileDefault } from "./util"
 
 /**
@@ -8,17 +8,16 @@ import { existFile, getProjectRoot, importFileDefault } from "./util"
 const defaultConfig: ProjectConfig = {
   controllerDir: "/src/controllers", // 后端的controller地址
   routerPrefix: "/api",
+  port: 3303,
 }
-
-
 
 export const getProjectConfigPre = (): ProjectConfig => {
   const root = getProjectRoot()
   let jsFile = resolve(root, "gganbu.config.js")
   let tsFile = resolve(root, "gganbu.config.ts")
   let filePath = (existFile(jsFile) && jsFile) || (existFile(tsFile) && tsFile)
-  if (!filePath) return defaultConfig
-  return importFileDefault(filePath)
+  let config = importFileDefault(filePath) || {}
+  return { ...defaultConfig, ...config }
 }
 export const wrappedProjectConfig = {
   getConfig: (): ProjectConfig => {
@@ -54,13 +53,9 @@ export const getResolvedSrcDir = () => {
   return resolve(root, "./src")
 }
 
-
-
-
 /**
  * 自定义项目配置
  */
 export const defineConfig = (config: ProjectConfig) => {
   return config
 }
-
