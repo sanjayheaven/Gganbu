@@ -6,8 +6,8 @@ import { convertFileToRoute } from "./util"
 /**
  * 创建 api 虚拟文档
  */
-// const createApi = (exports, route, requestPath = "gganbu/dist/request") => {
-const createApi = (exports, route, requestPath = "~/src/request") => {
+const createApi = (exports, route, requestPath = "gganbu/dist/request") => {
+// const createApi = (exports, route, requestPath = "~/src/request") => {
   let { port, routerPrefix, baseURL } = getProjectConfig()
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default

@@ -26,3 +26,4 @@ pnpm-debug.log*
 # vuepress
 .temp/
 docs/.vuepress/dist
+编译发布.md

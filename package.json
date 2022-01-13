@@ -1,6 +1,6 @@
 {
   "name": "gganbu",
-  "version": "1.1.12",
+  "version": "1.1.14",
   "description": "Gganbu 一体化 Web 开发框架",
   "main": "dist/index.js",
   "scripts": {
