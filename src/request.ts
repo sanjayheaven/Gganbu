@@ -21,7 +21,8 @@ export const request = async (config) => {
 
   // 开发环境 其他环境
   let DevUrl = `http://127.0.0.1:${port}${routerPrefix}`
-  let OtherUrl = (baseURL && `${baseURL}${routerPrefix}`) || ""
+  // let OtherUrl = (baseURL && `${baseURL}${routerPrefix}`) || ""
+  let OtherUrl = baseURL || ""
 
   console.log(OtherUrl, DevUrl, process.env.NODE_ENV)
   if (["development", "dev"].includes(process.env.NODE_ENV)) {

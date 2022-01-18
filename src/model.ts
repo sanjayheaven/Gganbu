@@ -2,7 +2,7 @@
  * 如果这个作为一个 npm库 那导入 let {Controller} =  require('Gganbu')
  * 怎么能确保在任何地方导入 都能读取到 指定Controller、
  */
- import Koa from "Koa"
+ import Koa from "koa"
  import KoaCompose from "koa-compose"
  import KoaRouter from "koa-router"
  import {
