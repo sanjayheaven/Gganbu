@@ -25,10 +25,23 @@ Gganbu 是 致力于提效全栈开发的 Nodejs 框架。
 - 零 Route 配置，按照文件所在路径 自动配置 Route
 - 基于 Vite + TypeScript 开发，支持 React/Vue 等框架
 
-## 🔨 安装
+## 🔨 快速上手
+
+### 安装
 
 ```shell
 npm install gganbu
+```
+
+### Vite 配置
+
+在 **vite.config.ts**中添加插件
+
+```js
+import { VitePlugin } from "gganbu"
+export default defineConfig({
+  plugins: [VitePlugin()],
+})
 ```
 
 ## 🏳‍🌈 示例
@@ -128,7 +141,7 @@ export const getInfo = async () => {}
 getInfo.config = { middlewares: [logger] }
 ```
 
-## Hooks
+## 🪝 Hooks
 
 通常，我们在编写后端代码的时候，通常会是如下写法，
 
