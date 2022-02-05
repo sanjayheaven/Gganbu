@@ -66,11 +66,11 @@ let data = await getInfo()
 console.log(data) // 这是 getInfo 函数的返回结果
 ```
 
-## 📡 💡 路由
+## 📡 路由
 
 Gganbu 通过文件路径 + 导出方法解析出路由配置。
 
-## 默认解析
+### 默认解析
 
 将通过以下三个示例来说明 Gganbu 如何解析路由配置。
 
