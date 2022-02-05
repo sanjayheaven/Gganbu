@@ -109,12 +109,3 @@ npm run build:client
 
 打包结果在 dist 文件夹中。
 
-### 后端打包
-
-在项目目录下终端窗口，执行以下命令。
-
-```js
-npm run build:server
-```
-
-打包结果在 dist 文件夹中。
