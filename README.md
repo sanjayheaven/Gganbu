@@ -174,7 +174,7 @@ export async getOrder()=>{
 
 ### 内置 Hook
 
-Gganbu 采用 **AsyncLocalStorage**，来共享异步资源状态。
+Gganbu 采用 **[AsyncLocalStorage](http://nodejs.cn/api/async_context.html#class-asynclocalstorage)**，来共享异步资源状态。
 
 #### useContext
 
