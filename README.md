@@ -49,6 +49,42 @@ let data = await getInfo()
 console.log(data) // 这是 getInfo 函数的返回结果
 ```
 
+## 路由
+
+Gganbu 通过文件路径 + 导出方法解析出路由配置。
+
+## 默认解析
+
+将通过以下三个示例来说明 Gganbu 如何解析路由配置。
+
+文件路径 /controller/manage/order.ts
+
+- **getOrder** ➡ **GET** /manage/orders/getOrder
+- **createOrder** ➡ **POST** /manage/orders/createOrder
+- **default** ➡ **POST** /manage/orders/
+
+当 **Controller Action** 也就是 导出方法 以 **get** 开头的时候，路由方法 对应 **GET**。  
+其余则为 **POST** 方法，包括导出的 **default** 方法。  
+同时，值得注意的是，Gganbu 会自动将 导出方法所在文件名 解析为**复数形式**。
+
+### 路由设置
+
+#### 全局路由
+
+Gganbu 同时也提供了路由设置，其中全局路由在 **gganbu.config.ts** 中设置。
+
+```js
+import { defineConfig } from "gganbu"
+
+export default defineConfig({
+  routerPrefix: "/api",
+})
+```
+
+#### 单个服务的路由
+
+对于早期版本，暂不开放
+
 ## 🌈 中间件
 
 在编写 server 部分代码的时候，我们需要全局中间件，需要单个路由的中间件。
@@ -129,7 +165,6 @@ Gganbu 采用 **AsyncLocalStorage**，来共享异步资源状态。
 
 ```js
 import { useContext } from "gganbu"
-export
 ```
 
 ### 自定义 Hook
@@ -156,12 +191,6 @@ export const useReponse = () => {
 
 ```js
 npm run build // vite 默认打包方式
-```
-
-或者
-
-```js
-npm run build:client
 ```
 
 打包结果在 dist 文件夹中。
