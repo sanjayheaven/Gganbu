@@ -10,8 +10,10 @@ export const getProjectConfigPre = (): ProjectConfig => {
   let config = importFileDefault(filePath) || {}
   return { ...defaultConfig, ...config }
 }
+/**
+ * 用于cli 重载getConfig方法
+ */
 export const wrappedProjectConfig = {
-  // 用于cli 重载getConfig方法
   getConfig: (): ProjectConfig => {
     return getProjectConfigPre()
   },
@@ -20,9 +22,13 @@ export const getProjectConfig = () => {
   return wrappedProjectConfig.getConfig()
 }
 
+/**
+ * 获取路径解析好的 服务目录地址
+ */
 export const getResolvedServiceDir = () => {
-  const root = getProjectRoot()
-  return resolve(root, "./services")
+  let root = getProjectRoot()
+  let { serviceDir } = getProjectConfig()
+  return resolve(root, serviceDir)
 }
 
 /**

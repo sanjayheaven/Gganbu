@@ -91,12 +91,12 @@ export const start = async () => {
     startWatch()
   }
   let childPath = join(__dirname, "./childModule.ts")
-  let MODELPATH = resolve(__dirname, "../model")
+  let APPPATH = resolve(__dirname, "../app/index")
   return new Promise<void>(async (resolve) => {
     Spinner.start()
     forked = fork(childPath, [], {
       cwd: getProjectRoot(),
-      env: { MODELPATH, SERVERPORT: checkedPort },
+      env: { APPPATH, SERVERPORT: checkedPort },
     })
     forked.on("message", (msg: ProcessMessage) => {
       if (msg.type == "started") {
