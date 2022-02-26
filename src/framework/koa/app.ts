@@ -2,7 +2,7 @@ import Koa from "Koa"
 import KoaRouter from "koa-router"
 import KoaCompose from "koa-compose"
 import GlobalDefaultMiddlewares from "./middlewares"
-import { isFn } from "../../utils"
+import { convertFileToRoute, isFn } from "../../utils"
 import { ServiceAction } from "../../types/service"
 import {
   Context,
@@ -73,10 +73,12 @@ const getRoutes = () => {
 const getRouters = (config?: FrameworkConfig): KoaRouter.IMiddleware[] => {
   let { routerPrefix } = { ...defaultConfig, ...(config || {}) }
   let routes = getRoutes()
-  return routes.reduce((acc: KoaRouter.IMiddleware[], route: Route) => {
-    let { controllerAction, serviceFileName, method, serviceAction } = route
+  let res = routes.reduce((acc: KoaRouter.IMiddleware[], route: Route) => {
+    let { controllerAction, serviceFilePath, method, serviceAction } = route
+
+    let name = convertFileToRoute(serviceFilePath)
     let router = new KoaRouter({
-      prefix: join(routerPrefix, pluralize(serviceFileName)),
+      prefix: join(routerPrefix, pluralize(name)),
     })
     let routeMiddlewares = serviceAction?.config?.middlewares || []
     if (method == "GET") {
@@ -88,6 +90,7 @@ const getRouters = (config?: FrameworkConfig): KoaRouter.IMiddleware[] => {
     acc.push(router.allowedMethods())
     return acc
   }, [])
+  return res
 }
 
 const start = async (config?: FrameworkConfig) => {
@@ -99,9 +102,7 @@ const start = async (config?: FrameworkConfig) => {
   App.use(KoaCompose([...middlewares, ...GlobalDefaultMiddlewares, ...routers]))
   //   start
   let server = App.listen(port, () => {
-    console.log(
-      `👻  :Server is now listening for the requests at port: ${port} `
-    )
+    console.log(`👻  :Server listening at port: ${port} `)
   })
   // pm2 平滑更新
   process.on("SIGINT", () => {

@@ -60,6 +60,7 @@ export const defineConfig = (config: ProjectConfig) => {
  */
 const defaultConfig: ProjectConfig = {
   controllerDir: "/src/controllers", // 后端的controller地址
+  serviceDir: "/src/apis", // 后端的服务目录地址
   routerPrefix: "/api",
   port: 3303,
 }
