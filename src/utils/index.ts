@@ -3,8 +3,10 @@ import fs, { existsSync } from "fs"
 import pluralize from "pluralize"
 import { sync } from "pkg-dir"
 import createJITI from "jiti"
-import { getResolvedControllerDir } from "./config"
-import { ControllerAction } from "./types/model"
+import { getResolvedControllerDir } from "../config/index"
+import { ControllerAction } from "../types/model"
+import { Service } from "../types/service"
+
 const jiti = createJITI(process.cwd(), { cache: false })
 
 export const isFn = (item) => {
@@ -39,6 +41,25 @@ export const listFiles = (currentDirPath) => {
     } else if (stat.isFile()) {
       if (!isTsOrJsFile(file)) return acc
       acc.push({ filePath, fileName: file })
+    }
+    return acc
+  }, [])
+}
+
+/**
+ * 列出某个服务的文件，仅限第一层目录以及第一层的文件
+ */
+export const listServiceFiles = (currentDirPath): Service[] => {
+  return fs.readdirSync(currentDirPath).reduce((acc: Service[], file) => {
+    let filePath = path.resolve(currentDirPath, file)
+    let stat = fs.statSync(filePath)
+    if (stat.isDirectory()) {
+      let indexFile = path.resolve(filePath, "index.ts")
+      acc.push({ filePath: indexFile, fileName: file })
+    } else {
+      if (!isTsOrJsFile(file)) return acc
+      let indexFile = path.resolve(filePath)
+      acc.push({ filePath: indexFile, fileName: file })
     }
     return acc
   }, [])

@@ -1,7 +1,7 @@
 /**
  * project config
  */
- export interface ProjectConfig {
+export interface ProjectConfig {
   controllerDir?: string
   routerPrefix?: string
   build?: {
@@ -11,4 +11,5 @@
   // server relative
   middlewares?: any[] // global middleware
   port?: number // server port
+  plugins?: any[] // plugins
 }

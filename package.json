@@ -38,6 +38,7 @@
     "koa2-cors": "^2.0.6",
     "light-spinner": "^1.0.4",
     "moment": "^2.29.1",
+    "mongoose": "^5.13.14",
     "pkg-dir": "^5.0.0",
     "pluralize": "^8.0.0",
     "portfinder": "^1.0.28",
@@ -46,6 +47,7 @@
     "vite": "^2.6.14"
   },
   "devDependencies": {
+    "@types/koa": "^2.13.4",
     "@types/node": "^16.11.11",
     "@types/pluralize": "0.0.29",
     "chalk": "^4.1.0",

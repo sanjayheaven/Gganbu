@@ -1,14 +1,15 @@
 import * as chokidar from "chokidar"
 import { join, relative, resolve } from "upath"
-import { getResolvedSrcDir } from "../config"
-import { getProjectRoot } from "../util"
+import { getResolvedSrcDir } from "../config/index"
+import { getProjectRoot } from "../utils"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
 import Spin from "light-spinner"
 import { ProcessMessage } from "../types/cli"
 import { checkPort } from "./util"
 import { ProjectConfig } from "../types/config"
-import { getProjectConfig, wrappedProjectConfig } from ".."
+import { getProjectConfig, wrappedProjectConfig } from "../config"
+
 const Spinner = new Spin({ text: "Gganbu Starting" })
 
 // 状态库
@@ -53,6 +54,9 @@ export const startWatch = () => {
   })
 }
 
+/**
+ * 关闭应用，关闭进程
+ */
 export const close = async () => {
   Spinner.stop()
   if (forked?.kill) {
@@ -86,7 +90,7 @@ export const start = async () => {
   if (!state.hasWatched) {
     startWatch()
   }
-  let childPath = join(__dirname, "./childModule")
+  let childPath = join(__dirname, "./childModule.ts")
   let MODELPATH = resolve(__dirname, "../model")
   return new Promise<void>(async (resolve) => {
     Spinner.start()

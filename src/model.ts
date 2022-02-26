@@ -11,7 +11,7 @@
    importFile,
    isFn,
    proxyController,
- } from "./util"
+ } from "./utils"
  import { join } from "upath"
  import { getProjectConfig, getResolvedControllerDir } from "./config"
  import { Route, Controller } from "./types/model"
