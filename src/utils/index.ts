@@ -4,15 +4,15 @@ import pluralize from "pluralize"
 import { sync } from "pkg-dir"
 import createJITI from "jiti"
 import { getResolvedControllerDir } from "../config/index"
-import { ControllerAction } from "../types/model"
 import { Service } from "../types/service"
+import { ControllerAction } from "../types/model"
 
 const jiti = createJITI(process.cwd(), { cache: false })
 
-export const isFn = (item) => {
+export const isFn = (item: any) => {
   return typeof item === "function"
 }
-export const isTsOrJsFile = (file) => {
+export const isTsOrJsFile = (file: string) => {
   return [".ts", ".js"].includes(extname(file))
 }
 
@@ -20,7 +20,7 @@ export const isTsOrJsFile = (file) => {
  * 判断是不是属于 controller下的js文件
  * 存在这种情况 D:/Github/Gganbu/src/api/manage/order.ts?t=1637686059242
  */
-export const isApiFile = (file) => {
+export const isApiFile = (file: string) => {
   let resolvedControllerDir = getResolvedControllerDir()
   if (file.indexOf(resolvedControllerDir) == -1) return false
   if (!isTsOrJsFile(file)) return false

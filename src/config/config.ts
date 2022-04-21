@@ -1,4 +1,4 @@
-import { join, resolve } from "upath"
+import { resolve } from "upath"
 import { ProjectConfig } from "../types/config"
 import { existFile, getProjectRoot, importFileDefault } from "../utils"
 

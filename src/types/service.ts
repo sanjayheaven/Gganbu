@@ -14,5 +14,4 @@ export interface ServiceAction {
   config?: {
     middlewares?: any[] // 判断是否有中间件，有就先组合
   }
-  
 }

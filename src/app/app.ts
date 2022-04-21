@@ -1,18 +1,21 @@
 import { IApp } from "../types/app"
 import { Plugin } from "../types/plugin"
 
-const plugins: Plugin[] = []
+const Plugins: Plugin[] = []
+
 export const App: IApp = {
   loadPlugins(plugins: Plugin[]) {
-    plugins.concat(plugins)
+    for (let plugin of plugins) {
+      Plugins.push(plugin)
+    }
     return App
   },
   load(plugin) {
-    plugins.push(plugin)
+    Plugins.push(plugin)
     return App
   },
   async run() {
-    for (let plugin of plugins) {
+    for (let plugin of Plugins) {
       await plugin.start()
     }
   },

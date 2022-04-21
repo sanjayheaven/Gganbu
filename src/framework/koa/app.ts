@@ -38,7 +38,7 @@ const getControllers = (): Controller[] => {
             let res = await serviceAction(query)
             ctx.body = res
           } else {
-            let body = ctx.request.body
+            let body = ctx.request.body // bodyparser 解析出来的
             let res = await serviceAction(body)
             ctx.body = res
           }

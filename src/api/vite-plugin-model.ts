@@ -1,6 +1,6 @@
-import { createApiSDK } from "./api"
-import { start } from "./cli"
-import { isApiFile } from "./util"
+import { createApiSDK } from "./index"
+import { start } from "../cli"
+import { isApiFile } from "../utils"
 
 export default function () {
   return {

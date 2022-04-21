@@ -4,4 +4,5 @@ export {
   getResolvedServiceDir,
   wrappedProjectConfig,
   getResolvedSrcDir,
+  defineConfig,
 } from "./config"
