@@ -32,7 +32,7 @@ export interface Route {
  */
 export interface ControllerAction {
   (...arges: any[]): any
-  hasProxyed?: Boolean // 用来标记 是否代理过 proxyController
+  hasProxyed?: Boolean // 用来标记 是否代理过 
   routeMiddlewares?: any[] // 判断是否有中间件，有就先组合
   config?: {
     middlewares?: any[] // 判断是否有中间件，有就先组合

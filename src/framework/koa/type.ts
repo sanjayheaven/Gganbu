@@ -1,5 +1,6 @@
 import { Context } from "koa"
-import { ServiceAction } from "../../types/service"
+
+import { ServiceAction } from "../../service/type"
 // extends type Service
 
 export { Context } from "koa"
@@ -10,19 +11,19 @@ export interface Controller {
   exports: Object
 }
 
+interface ControllerAction {
+  (ctx: Context): any
+}
+
+type HttpMethod = "GET" | "POST"
+
 export interface Route {
   path: string
-  method: string
-  actionName: string
-  serviceFilePath: string
-  serviceFileName: string
+  routerPrefix: string
+  method: HttpMethod
   serviceAction: ServiceAction
   controllerAction: ControllerAction
   middlewares?: [] // 文件级别中间件
-}
-
-export interface ControllerAction {
-  (ctx: Context): any
 }
 
 /**
@@ -30,6 +31,6 @@ export interface ControllerAction {
  */
 export interface FrameworkConfig {
   port: Number
-  routerPrefix?: String
+  // routerPrefix?: String  // 1.2.x 去除
   middlewares?: []
 }

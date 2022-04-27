@@ -8,7 +8,7 @@ import { convertFileToRoute } from "../utils"
  */
 const createApi = (exports, route, requestPath = "gganbu/dist/request") => {
   // const createApi = (exports, route, requestPath = "~/src/request") => {
-  let { port, routerPrefix, baseURL } = getProjectConfig()
+  let { port, baseURL = "" } = getProjectConfig()
   let fns = exports
     .filter((i) => i != "default") // 过滤 export default
     .map((name) => {
@@ -27,7 +27,6 @@ const createApi = (exports, route, requestPath = "gganbu/dist/request") => {
               data:${(method == "POST" && "{args}") || "{}"},
               params:${(method == "GET" && "{...firstArg}") || "{}"},
               port:${port},
-              routerPrefix:"${routerPrefix}",
               baseURL:"${baseURL}"
             })
           }`

@@ -31,6 +31,7 @@
     "axios": "^0.24.0",
     "chokidar": "^3.5.2",
     "es-module-lexer": "^0.9.3",
+    "gganbu": "^1.1.17",
     "jiti": "^1.10.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",

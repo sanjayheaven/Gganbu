@@ -1,4 +1,4 @@
-import { Plugin } from "./plugin"
+import { Plugin } from "../plugins/type"
 
 export interface IApp {
   loadPlugins(plugins: Plugin[]): IApp //

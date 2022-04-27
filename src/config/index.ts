@@ -1,6 +1,5 @@
 export {
   getProjectConfig,
-  getResolvedControllerDir,
   getResolvedServiceDir,
   wrappedProjectConfig,
   getResolvedSrcDir,

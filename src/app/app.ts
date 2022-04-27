@@ -1,5 +1,5 @@
-import { IApp } from "../types/app"
-import { Plugin } from "../types/plugin"
+import { IApp } from "./type"
+import { Plugin } from "../plugins/type"
 
 const Plugins: Plugin[] = []
 

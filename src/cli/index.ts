@@ -5,9 +5,9 @@ import { getProjectRoot } from "../utils"
 import { fork } from "child_process"
 import { statSync, existsSync } from "fs"
 import Spin from "light-spinner"
-import { ProcessMessage } from "../types/cli"
 import { checkPort } from "./util"
-import { ProjectConfig } from "../types/config"
+import { ProcessMessage } from "./type"
+import { ProjectConfig } from "../config/type"
 import { getProjectConfig, wrappedProjectConfig } from "../config"
 
 const Spinner = new Spin({ text: "Gganbu Starting" })

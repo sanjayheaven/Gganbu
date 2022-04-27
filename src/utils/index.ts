@@ -3,9 +3,10 @@ import fs, { existsSync } from "fs"
 import pluralize from "pluralize"
 import { sync } from "pkg-dir"
 import createJITI from "jiti"
-import { getResolvedControllerDir } from "../config/index"
-import { Service } from "../types/service"
+import { getResolvedServiceDir } from "../config/index"
+import { Service } from "../service/type"
 import { ControllerAction } from "../types/model"
+import { getResolvedSrcDir } from "gganbu"
 
 const jiti = createJITI(process.cwd(), { cache: false })
 
@@ -17,11 +18,11 @@ export const isTsOrJsFile = (file: string) => {
 }
 
 /**
- * 判断是不是属于 controller下的js文件
+ * 判断是不是属于 service下的js文件
  * 存在这种情况 D:/Github/Gganbu/src/api/manage/order.ts?t=1637686059242
  */
 export const isApiFile = (file: string) => {
-  let resolvedControllerDir = getResolvedControllerDir()
+  let resolvedControllerDir = getResolvedServiceDir()
   if (file.indexOf(resolvedControllerDir) == -1) return false
   if (!isTsOrJsFile(file)) return false
   return true
@@ -30,6 +31,7 @@ export const isApiFile = (file: string) => {
 /**
  * 列出某个目录下的文件，返回格式
  * {filePath,fileName}
+ * fileName: 示例：order.ts
  */
 export const listFiles = (currentDirPath) => {
   return fs.readdirSync(currentDirPath).reduce((acc, file) => {
@@ -66,39 +68,19 @@ export const listServiceFiles = (currentDirPath): Service[] => {
 }
 
 /**
- * file: D:/Github/Gganbu/src/controller/manage/order.js
- * ---->  manage/orders
+ * file: D:/Github/Gganbu/src/api/manage/order.js
+ * ---->  /api/manage/orders 1.2.x 修改
  */
-export const convertFileToRoute = (file) => {
-  let resolvedControllerDir = getResolvedControllerDir()
-  let splitArr = file.split(resolvedControllerDir)
-  let fileSplit = splitArr[1].split("/")
+export const convertFileToRoute = (file: string) => {
+  let resolvedSrcDir = getResolvedSrcDir() // /src
+  let splitArr = file.split(resolvedSrcDir)
+  let fileSplit = splitArr[1].split("/") // [api,manage,order.js]
   let lastItem = fileSplit[fileSplit.length - 1]
   if (isTsOrJsFile(file)) {
     lastItem = lastItem.substring(0, lastItem.indexOf(".")) // 去除js后缀
   }
   fileSplit.splice(fileSplit.length - 1, 1, pluralize(lastItem)) // 替换原来的最后一项
   return fileSplit.join("/")
-}
-
-/**
- * 在一体化中，用return 值 来表示 ctx.body
- *
- */
-export const proxyController = (
-  actionFn: ControllerAction
-): ControllerAction => {
-  return async function (ctx) {
-    let res = {}
-    if (ctx.method == "POST") {
-      let { args = [] } = ctx.request.body
-      res = await actionFn(...args)
-    } else if (ctx.method == "GET") {
-      let query = ctx.request.query || {}
-      res = await actionFn(query)
-    }
-    ctx["body"] = res
-  }
 }
 
 /**
