@@ -28,12 +28,7 @@ const getRoutes = () => {
         let controllerAction = async (ctx: Context) => {
           let params = method == "GET" ? ctx.request.query : ctx.request.body
           // 这里的ctx.request.body 只解决了一体化中前端发起的请求，没有解决postman中的请求，对象不可迭代
-          console.log(ctx.request.body, 1111222, ctx.request.files)
-          if (method == "GET") {
-            ctx.body = await serviceAction(params)
-          } else {
-            ctx.body = await serviceAction(...params)
-          }
+          ctx.body = await serviceAction(params)
         }
         return { path, method, routerPrefix, serviceAction, controllerAction }
       })
@@ -52,7 +47,6 @@ const getRouters = (): KoaRouter.IMiddleware[] => {
     } else {
       router.post(route.path, ...routeMiddlewares, controllerAction)
     }
-    console.log(router, routeMiddlewares[0], 1292992)
     acc.push(router.routes())
     acc.push(router.allowedMethods())
     return acc

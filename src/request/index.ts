@@ -26,10 +26,6 @@ export const request = async (config: RequestConfig) => {
    */
 
   let url = `http://localhost:${port}`
-  console.log(config, 10100)
-
-  let contentType = "application/json" // 默认
-  // instance.defaults.headers.common["Content-Type"] = "multipart/form-data"
   return instance({
     ...config,
     baseURL: baseURL || url,
