@@ -2,6 +2,7 @@
 
 - serverless
 - 自动部署相关
+- SSR
 
 ## 2.x.x（beta）
 

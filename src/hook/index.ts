@@ -9,3 +9,8 @@ export const useContext = () => {
 export const useConfig = () => {
   return als.getStore()["config"]
 }
+export const useFiles = () => {
+  // only using when upload some files
+  let ctx = useContext()
+  return ctx["files"]
+}

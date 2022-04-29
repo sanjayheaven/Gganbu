@@ -1,6 +1,5 @@
 import axios from "axios"
 import { RequestConfig } from "./type"
-import { join } from "upath"
 
 export const instance = axios.create({})
 instance.interceptors.request.use(
@@ -27,9 +26,13 @@ export const request = async (config: RequestConfig) => {
    */
 
   let url = `http://localhost:${port}`
+  console.log(config, 10100)
+
+  let contentType = "application/json" // 默认
+  // instance.defaults.headers.common["Content-Type"] = "multipart/form-data"
   return instance({
     ...config,
     baseURL: baseURL || url,
-    headers: { "Content-Type": "application/json" }, // 暂定
+    // headers: { "Content-Type": "multipart/form-data" },
   })
 }
