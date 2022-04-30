@@ -1,6 +1,6 @@
 import mongoose, { Schema, SchemaDefinitionProperty } from "mongoose"
 import path from "path"
-import { firstAlphaToUpperCase } from "../../util"
+import { firstAlphaToUpperCase } from "../../utils"
 
 export const createSchema = (obj: SchemaDefinitionProperty) => {
   return new Schema(obj)

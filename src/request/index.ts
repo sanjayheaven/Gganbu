@@ -29,6 +29,5 @@ export const request = async (config: RequestConfig) => {
   return instance({
     ...config,
     baseURL: baseURL || url,
-    // headers: { "Content-Type": "multipart/form-data" },
   })
 }

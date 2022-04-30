@@ -5,8 +5,7 @@ import { sync } from "pkg-dir"
 import createJITI from "jiti"
 import { getResolvedServiceDir } from "../config/index"
 import { Service } from "../service/type"
-import { ControllerAction } from "../types/model"
-import { getResolvedSrcDir } from "gganbu"
+import { getResolvedSrcDir } from "../config"
 
 const jiti = createJITI(process.cwd(), { cache: false })
 

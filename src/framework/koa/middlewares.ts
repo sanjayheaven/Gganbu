@@ -1,6 +1,5 @@
 // 处理跨域
 import cors from "koa2-cors"
-import koabodyparser from "koa-bodyparser"
 // koa-body
 import KoaBody from "koa-body"
 
