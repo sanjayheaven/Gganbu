@@ -110,3 +110,11 @@ export const importFileDefault = (filePath: string) => {
 export const existFile = (filePath: string) => {
   return existsSync(filePath)
 }
+
+/**
+ * 首字母大写
+ */
+export const firstAlphaToUpperCase = (str: string) => {
+  let [first, ...rest] = str
+  return first.toUpperCase() + rest.join("")
+}

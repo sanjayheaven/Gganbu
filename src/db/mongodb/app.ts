@@ -1,4 +1,4 @@
-import { DBPlugin } from "../type"
+import { DBPlugin } from "../../plugins/type"
 import mongoose from "mongoose"
 import { DBConfig } from "./type"
 

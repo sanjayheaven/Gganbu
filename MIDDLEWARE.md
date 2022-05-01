@@ -8,31 +8,30 @@ Gganbu 对中间件的处理 也同样分为三类：
 - 文件中间件
 - 单路由（函数）中间件
 
-## 全局中间件
+## 全局级中间件
 
 全局中间件 在 gganbu.config.ts 中配置。
 
 ```ts
 import { defineConfig } from "gganbu/dist/config"
+
 export default defineConfig({
   middlewares: [], // 全局中间件
-  port: 9527,
 })
 ```
 
-## 文件中间件
+## 文件级中间件
 
-文件级的中间件在 Controller 文件中定义，能对该文件内所有的函数生效。  
+文件级的中间件在文件中定义，能对该文件内所有的函数生效。  
 用法如下：
 
 ```js
-export const someControllerAction = async () => {}
 export const config = {
   middlewares: [],
 }
 ```
 
-## 路由中间件
+## 路由级中间件
 
 单个路由级别的中间件,
 

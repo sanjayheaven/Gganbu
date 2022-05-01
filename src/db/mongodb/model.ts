@@ -13,3 +13,5 @@ export const createModel = (module: NodeModule, schema: Schema) => {
 }
 
 export const ObjectId = Schema.Types.ObjectId
+
+export { SchemaDefinitionProperty } from "mongoose"
