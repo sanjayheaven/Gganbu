@@ -42,6 +42,7 @@
     "pkg-dir": "^5.0.0",
     "pluralize": "^8.0.0",
     "portfinder": "^1.0.28",
+    "redis": "^4.0.6",
     "typescript": "^4.5.2",
     "upath": "^2.0.1",
     "vite": "^2.6.14"
