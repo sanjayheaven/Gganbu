@@ -1,3 +1,4 @@
+import { Plugin } from "../plugins/type"
 import { RequestConfig } from "../request/type"
 
 /**
@@ -12,8 +13,8 @@ export interface ProjectConfig {
   }
   baseURL?: string
   // server relative
-  middlewares?: any[] // global middleware
-  plugins?: any[] // plugins
+  middlewares?: any[] // global middleware // 2.x.x版本去除
+  plugins?: Plugin[] // plugins
 
   requestConfig?: RequestConfig // axios request config
 }

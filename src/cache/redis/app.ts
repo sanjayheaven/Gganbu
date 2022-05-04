@@ -5,9 +5,10 @@ import { CacheConfig } from "./type"
 
 const defaultConfig: CacheConfig = {}
 
-export let RedisClient: RedisClientType = undefined
+export let RedisClient: RedisClientType
 
 const start = async (config: CacheConfig) => {
+  // @ts-ignore
   RedisClient = createClient(config)
   RedisClient.on("error", (err) => console.log("Redis Client Error", err))
   await RedisClient.connect()
